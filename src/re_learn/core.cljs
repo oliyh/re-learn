@@ -12,7 +12,7 @@
                        (fn [db [lesson-id]]
                          (update db :re-learn/lessons #(remove (comp (partial = lesson-id) :id)))))
 
-(re-frame/reg-event-db ::lesson-learned [trim-v]
+(re-frame/reg-event-db :tutorial/lesson-learned [trim-v]
                        (fn [db [lesson-id]]
                          (update db :re-learn/lessons-learned (fnil conj #{}) lesson-id)))
 

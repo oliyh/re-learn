@@ -11,7 +11,7 @@
 (def basket
   (with-meta
     (fn [items]
-      [:div
+      [:div {:style {:display "inline-block"}}
        [:span "Name"]
        [:span "Quantity"]
        [:span "Sub-total"]
