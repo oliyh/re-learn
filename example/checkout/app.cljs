@@ -1,5 +1,6 @@
 (ns checkout.app
   (:require [re-learn.core :as re-learn]
+            [re-learn.utils :as rlu]
             [reagent.core :as reagent]))
 
 (defn- basket-item [{:keys [name quantity unit-price sub-total-price]}]
@@ -9,7 +10,10 @@
    [:span sub-total-price]])
 
 (def basket
-  (with-meta
+  (rlu/with-lesson
+    {:id :basket
+     :description "This is your basket where all the items you want to purchase appear"}
+
     (fn [items]
       [:div {:style {:display "inline-block"}}
        [:span "Name"]
@@ -17,12 +21,7 @@
        [:span "Sub-total"]
        (for [{:keys [id] :as item} items]
          ^{:key id}
-         [basket-item item])])
-
-    {:component-did-mount (re-learn/register-lesson
-                           {:id :basket
-                            :description "This is your basket where all the items you want to purchase appear"})
-     :component-will-unmount (re-learn/deregister-lesson :basket)}))
+         [basket-item item])])))
 
 (defn- init []
   (let [app-root (js/document.getElementById "app")
