@@ -9,7 +9,7 @@
      :description "When you're ready, click here to purchase"}
 
     (fn []
-      [:button "Purchase"])))
+      [:button.mdl-button.mdl-button--raised "Purchase"])))
 
 (defn actions []
   [:div [purchase-button]])
@@ -20,13 +20,15 @@
      :description "The total amount of your basket appears here"}
 
     (fn [items]
-      [:div [:strong "Total: £" (reduce (comp + :sub-total-price) items)]])))
+      [:tr
+       [:td {:col-span 2} "Total"]
+       [:td "£" (reduce (comp + :sub-total-price) @items)]])))
 
 (defn- basket-item [{:keys [name quantity unit-price sub-total-price]}]
-  [:div
-   [:span name]
-   [:span quantity " @ " unit-price]
-   [:span sub-total-price]])
+  [:tr
+   [:td name]
+   [:td quantity " @ " unit-price]
+   [:td sub-total-price]])
 
 (def basket
   (rlu/with-lesson
@@ -35,19 +37,23 @@
      :position :bottom}
 
     (fn [items]
-      [:div
-       [:span "Name"]
-       [:span "Quantity"]
-       [:span "Sub-total"]
-       (for [{:keys [id] :as item} items]
-         ^{:key id}
-         [basket-item item])])))
+      [:table.mdl-data-table
+       [:thead
+        [:tr
+         [:th "Name"]
+         [:th "Quantity"]
+         [:th "Sub-total"]]]
+       [:tbody
+        (doall (for [{:keys [id] :as item} @items]
+                 ^{:key id}
+                 [basket-item item]))
+        [totals items]]])))
 
 (def checkout
   (fn [app-state]
-    [:div {:style {:display "inline-block"}}
+    [:div {:style {:width "200px"
+                   :margin "100px auto"}}
      [basket app-state]
-     [totals app-state]
      [actions]]))
 
 (def tute
@@ -58,17 +64,17 @@
 (defn- init []
   (let [app-root (js/document.getElementById "app")
         tutorial-root (js/document.getElementById "tutorial")
-        app-state [{:id "apples"
-                    :name "Apples"
-                    :quantity 2
-                    :unit-price 0.3
-                    :sub-total-price 0.6}
+        app-state (reagent/atom [{:id "apples"
+                                  :name "Apples"
+                                  :quantity 2
+                                  :unit-price 0.3
+                                  :sub-total-price 0.6}
 
-                   {:id "oranges"
-                    :name "Oranges"
-                    :quantity 5
-                    :unit-price 0.25
-                    :sub-total-price 1.25}]]
+                                 {:id "oranges"
+                                  :name "Oranges"
+                                  :quantity 5
+                                  :unit-price 0.25
+                                  :sub-total-price 1.25}])]
     (reagent/render [checkout app-state] app-root)
     (reagent/render [re-learn/tutorial-view] tutorial-root)))
 
