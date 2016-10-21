@@ -10,7 +10,7 @@
 
 (re-frame/reg-event-db ::deregister-lesson [trim-v]
                        (fn [db [lesson-id]]
-                         (update db :re-learn/lessons #(remove (comp (partial = lesson-id) :id)))))
+                         (update db :re-learn/lessons #(remove (comp (partial = lesson-id) :id) %))))
 
 (re-frame/reg-event-db :tutorial/lesson-learned [trim-v]
                        (fn [db [lesson-id]]
