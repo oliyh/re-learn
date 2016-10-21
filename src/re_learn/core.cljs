@@ -5,12 +5,12 @@
             [re-learn.views :as views]))
 
 (re-frame/reg-event-db ::register-lesson [trim-v]
-                       (fn [db [lesson]]
-                         (update db :re-learn/lessons (fnil conj #{}) lesson)))
+                       (fn [db [{:keys [id] :as lesson}]]
+                         (update db :re-learn/lessons (fnil assoc {}) id lesson)))
 
 (re-frame/reg-event-db ::deregister-lesson [trim-v]
                        (fn [db [lesson-id]]
-                         (update db :re-learn/lessons #(remove (comp (partial = lesson-id) :id) %))))
+                         (update db :re-learn/lessons dissoc lesson-id)))
 
 (re-frame/reg-event-db :tutorial/lesson-learned [trim-v]
                        (fn [db [lesson-id]]
@@ -26,6 +26,7 @@
  :tutorial/current-lesson
  (fn [db]
    (->> (:re-learn/lessons db)
+        vals
         (remove (comp (or (:re-learn/lessons-learned db) #{}) :id))
         first)))
 
