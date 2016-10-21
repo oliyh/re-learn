@@ -12,7 +12,8 @@
 (def basket
   (rlu/with-lesson
     {:id :basket
-     :description "This is your basket where all the items you want to purchase appear"}
+     :description "This is your basket where all the items you want to purchase appear"
+     :position :bottom}
 
     (fn [items]
       [:div {:style {:display "inline-block"}}
