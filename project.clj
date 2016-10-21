@@ -10,6 +10,7 @@
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.8.0"]
                                        [org.clojure/clojurescript "1.9.229"]]}
              :dev {:source-paths ["dev"]
+                   :resource-paths ["example-resources"]
                    :exclusions [[org.clojure/tools.reader]]
                    :dependencies [[org.clojure/tools.reader "0.10.0"]
                                   [com.cemerick/piggieback "0.2.1"]
@@ -22,8 +23,8 @@
                         :figwheel true
                         :compiler {:main "checkout.app"
                                    :asset-path "js/out"
-                                   :output-to "resources/public/js/checkout.js"
-                                   :output-dir "resources/public/js/out"}}
+                                   :output-to "example-resources/public/js/checkout.js"
+                                   :output-dir "example-resources/public/js/out"}}
                        {:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-to "target/unit-test.js"
