@@ -7,16 +7,17 @@
         top (.-top bounds)
         left (.-left bounds)
         width (.-width bounds)]
-    [:div {:style {:top top
-                   :left (+ left width)
-                   :position "absolute"
-                   :padding 8
-                   :border-radius 4
-                   :color "white"
-                   :background-color "rgba(0, 0, 0, 0.8)"}}
+    [:div.lesson {:style {:top top
+                          :left (+ left width)
+                          :position "absolute"
+                          :padding 8
+                          :border-radius 4
+                          :color "white"
+                          :background-color "rgba(0, 0, 0, 0.8)"}}
      [:p description]
-     [:button {:style {:float "right"}
-               :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
+     [:button.lesson-learned
+      {:style {:float "right"}
+       :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
       (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])]]))
 
 (defn tutorial []
