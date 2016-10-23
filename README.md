@@ -16,7 +16,7 @@ Annotate reagent render functions with lessons
 
 (def purchase-button
   (rlu/with-lesson
-    {:id :purchase-button
+    {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
      :position :bottom}
 
@@ -28,7 +28,7 @@ Combine lessons into tutorials and attach them to views
 ```clojure
 (def checkout
   (rlu/with-tutorial
-    {:id :checkout
+    {:id :checkout-tutorial
      :lessons [basket
                totals
                purchase-button]}
@@ -50,7 +50,7 @@ Let re-learn take care of everything else!
     (reagent/render [re-learn/tutorial-view] tutorial-root)))
 ```
 
-[Look at the working example](tree/master/example/checkout/app.cljs) for more details.
+[Look at the working example](example/checkout/app.cljs) for more details.
 
 ## Development
 

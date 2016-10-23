@@ -5,7 +5,7 @@
 
 (def purchase-button
   (rlu/with-lesson
-    {:id :purchase-button
+    {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
      :position :bottom}
 
@@ -18,7 +18,7 @@
 
 (def totals
   (rlu/with-lesson
-    {:id :totals
+    {:id :totals-lesson
      :description "The total amount of your basket appears here"
      :position :right}
 
@@ -35,7 +35,7 @@
 
 (def basket
   (rlu/with-lesson
-    {:id :basket
+    {:id :basket-lesson
      :description "This is your basket where all the items you want to purchase appear"
      :position :left}
 
@@ -54,7 +54,7 @@
 
 (def checkout
   (rlu/with-tutorial
-    {:id :checkout
+    {:id :checkout-tutorial
      :lessons [basket
                totals
                purchase-button]}
