@@ -11,6 +11,7 @@ Todo
 ```clojure
 user> (dev)
 dev> (start)
+;; visit http://localhost:3449
 dev> (cljs)
 cljs.user>
 ```

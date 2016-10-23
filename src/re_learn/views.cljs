@@ -2,7 +2,7 @@
   (:require [goog.style :as gs]
             [re-frame.core :as re-frame]))
 
-(defn- bubble-position-style [dom-node position]
+(defn- container-position-style [dom-node position]
   (let [bounds (gs/getBounds dom-node)
         top (.-top bounds)
         left (.-left bounds)
@@ -12,28 +12,50 @@
     (cond-> {:position "absolute"}
 
       (= :right position)
-      (assoc :top top
+      (assoc :top (+ top (/ height 2))
              :left (+ left width))
 
       (= :bottom position)
       (assoc :top (+ top height)
-             :left left))))
+             :left (+ left (/ width 2))))))
+
+(defn- bubble-position-style [dom-node position]
+  (let [bounds (gs/getBounds dom-node)
+        top (.-top bounds)
+        left (.-left bounds)
+        width (.-width bounds)
+        height (.-height bounds)]
+
+    (cond-> {}
+
+      (= :right position)
+      (assoc :top -40
+             :left 10)
+
+      (= :bottom position)
+      (assoc :top 10
+             :left "-50%"))))
 
 (defn- lesson-bubble [lesson]
   (when @lesson
     (let [{:keys [id description dom-node position]
            :or {position :right}} @lesson]
-      [:div.lesson {:style (merge
-                            (bubble-position-style dom-node position)
-                            {:padding 8
-                             :border-radius 4
-                             :color "white"
-                             :background-color "rgba(0, 0, 0, 0.8)"})}
-       [:p description]
-       [:button.lesson-learned
-        {:style {:float "right"}
-         :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
-        (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])]])))
+      [:div.lesson-container {:style (container-position-style dom-node position)}
+       [:div.lesson {:class (str "lesson " (name position))
+                     :style (merge
+                             (bubble-position-style dom-node position)
+                             {:position "relative"
+                              :display "inline-block"
+
+                              :padding 8
+                              :border-radius 4
+                              :color "white"
+                              :background-color "rgba(0, 0, 0, 0.8)"})}
+        [:p description]
+        [:button.lesson-learned
+         {:style {:float "right"}
+          :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
+         (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])]]])))
 
 (defn tutorial []
   (let [current-lesson (re-frame/subscribe [:tutorial/current-lesson])]
