@@ -75,7 +75,12 @@
           :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
          (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])]]])))
 
-(defn tutorial []
+(defn all-lessons []
   (let [current-lesson (re-frame/subscribe [:tutorial/current-lesson])]
+    (fn []
+      [lesson-bubble current-lesson])))
+
+(defn tutorial [lessons]
+  (let [current-lesson (re-frame/subscribe [:tutorial/tutorial-of lessons])]
     (fn []
       [lesson-bubble current-lesson])))

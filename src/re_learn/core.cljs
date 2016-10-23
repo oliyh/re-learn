@@ -30,4 +30,18 @@
         (remove (comp (or (:re-learn/lessons-learned db) #{}) :id))
         first)))
 
+(re-frame/reg-sub
+ :tutorial/tutorial-of
+ (fn [db [_ {:keys [lessons]}]]
+   (let [lesson-ordinals (->> lessons
+                              (map (comp ::lesson-id meta))
+                              (map-indexed (comp vec reverse vector))
+                              (into {}))]
+     (->> (:re-learn/lessons db)
+          vals
+          (sort-by (comp lesson-ordinals :id))
+          (remove (comp (or (:re-learn/lessons-learned db) #{}) :id))
+          first))))
+
+(def all-lessons-view views/all-lessons)
 (def tutorial-view views/tutorial)
