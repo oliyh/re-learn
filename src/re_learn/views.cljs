@@ -11,9 +11,18 @@
 
     (cond-> {:position "absolute"}
 
+      (= :top position)
+      (assoc :top top
+             :height 100
+             :left (+ left (/ width 2)))
+
       (= :right position)
       (assoc :top (+ top (/ height 2))
              :left (+ left width))
+
+      (= :left position)
+      (assoc :top (+ top (/ height 2))
+             :left left)
 
       (= :bottom position)
       (assoc :top (+ top height)
@@ -28,9 +37,18 @@
 
     (cond-> {}
 
+      (= :top position)
+      (assoc :top "calc(-100% - 18px)"
+             :height 90
+             :left "-50%")
+
       (= :right position)
       (assoc :top -40
              :left 10)
+
+      (= :left position)
+      (assoc :top -40
+             :left "calc(-100% - 10px)")
 
       (= :bottom position)
       (assoc :top 10

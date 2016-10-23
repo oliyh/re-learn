@@ -6,7 +6,8 @@
 (def purchase-button
   (rlu/with-lesson
     {:id :purchase-button
-     :description "When you're ready, click here to purchase"}
+     :description "When you're ready, click here to purchase"
+     :position :bottom}
 
     (fn []
       [:button.mdl-button.mdl-button--raised "Purchase"])))
@@ -17,7 +18,8 @@
 (def totals
   (rlu/with-lesson
     {:id :totals
-     :description "The total amount of your basket appears here"}
+     :description "The total amount of your basket appears here"
+     :position :right}
 
     (fn [items]
       [:tr
@@ -34,7 +36,7 @@
   (rlu/with-lesson
     {:id :basket
      :description "This is your basket where all the items you want to purchase appear"
-     :position :bottom}
+     :position :left}
 
     (fn [items]
       [:table.mdl-data-table
@@ -52,7 +54,7 @@
 (def checkout
   (fn [app-state]
     [:div {:style {:width "200px"
-                   :margin "100px auto"}}
+                   :margin "200px auto"}}
      [basket app-state]
      [actions]]))
 
