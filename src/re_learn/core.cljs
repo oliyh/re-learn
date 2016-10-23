@@ -16,11 +16,26 @@
                        (fn [db [lesson-id]]
                          (update db :re-learn/lessons-learned (fnil conj #{}) lesson-id)))
 
+(re-frame/reg-event-db ::register-tutorial [trim-v]
+                       (fn [db [{:keys [id] :as tutorial}]]
+                         (update db :re-learn/tutorials (fnil assoc {}) id tutorial)))
+
+(re-frame/reg-event-db ::deregister-lesson [trim-v]
+                       (fn [db [tutorial-id]]
+                         (update db :re-learn/tutorials dissoc tutorial-id)))
+
+
 (defn register-lesson [lesson]
   (fn [this] (re-frame/dispatch [::register-lesson (assoc lesson :dom-node (r/dom-node this))])))
 
 (defn deregister-lesson [lesson-id]
   (fn [_] (re-frame/dispatch [::deregister-lesson lesson-id])))
+
+(defn register-tutorial [tutorial]
+  (fn [this] (re-frame/dispatch [::register-tutorial tutorial])))
+
+(defn deregister-tutorial [tutorial-id]
+  (fn [_] (re-frame/dispatch [::deregister-tutorial tutorial-id])))
 
 (re-frame/reg-sub
  :tutorial/current-lesson
@@ -31,17 +46,13 @@
         first)))
 
 (re-frame/reg-sub
- :tutorial/tutorial-of
- (fn [db [_ {:keys [lessons]}]]
-   (let [lesson-ordinals (->> lessons
-                              (map (comp ::lesson-id meta))
-                              (map-indexed (comp vec reverse vector))
-                              (into {}))]
-     (->> (:re-learn/lessons db)
-          vals
-          (sort-by (comp lesson-ordinals :id))
-          (remove (comp (or (:re-learn/lessons-learned db) #{}) :id))
-          first))))
+ :tutorial/current-tutorial
+ (fn [db]
+   (first (for [{:keys [lessons] :as tutorial} (vals (:re-learn/tutorials db))
+                :let [lessons (keep (:re-learn/lessons db) lessons)]
+                {:keys [id] :as lesson} lessons
+                :when (not (contains? (:re-learn/lessons-learned db) id))]
+            lesson))))
 
 (def all-lessons-view views/all-lessons)
 (def tutorial-view views/tutorial)

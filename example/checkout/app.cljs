@@ -52,16 +52,17 @@
         [totals items]]])))
 
 (def checkout
-  (fn [app-state]
-    [:div {:style {:width "200px"
-                   :margin "200px auto"}}
-     [basket app-state]
-     [actions]]))
+  (rlu/with-tutorial
+    {:id :checkout
+     :lessons [basket
+               totals
+               purchase-button]}
 
-(def tute
-  {:lessons [basket
-             totals
-             purchase-button]})
+    (fn [app-state]
+      [:div {:style {:width "200px"
+                     :margin "200px auto"}}
+       [basket app-state]
+       [actions]])))
 
 (defn- init []
   (let [app-root (js/document.getElementById "app")
@@ -78,6 +79,6 @@
                                   :unit-price 0.25
                                   :sub-total-price 1.25}])]
     (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn/tutorial-view tute] tutorial-root)))
+    (reagent/render [re-learn/tutorial-view] tutorial-root)))
 
 (.addEventListener js/document "DOMContentLoaded" init)

@@ -80,7 +80,7 @@
     (fn []
       [lesson-bubble current-lesson])))
 
-(defn tutorial [lessons]
-  (let [current-lesson (re-frame/subscribe [:tutorial/tutorial-of lessons])]
+(defn tutorial []
+  (let [current-lesson (re-frame/subscribe [:tutorial/current-tutorial])]
     (fn []
       [lesson-bubble current-lesson])))
