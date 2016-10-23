@@ -9,8 +9,9 @@
      :description "When you're ready, click here to purchase"
      :position :bottom}
 
-    (fn []
-      [:button.mdl-button.mdl-button--raised "Purchase"])))
+    (fn [] [:button.mdl-button.mdl-button--raised
+            {:style {:margin-top 10}}
+            "Purchase"])))
 
 (defn actions []
   [:div [purchase-button]])
@@ -24,7 +25,7 @@
     (fn [items]
       [:tr
        [:td {:col-span 2} "Total"]
-       [:td "£" (reduce (comp + :sub-total-price) @items)]])))
+       [:td (reduce + (map :sub-total-price @items))]])))
 
 (defn- basket-item [{:keys [name quantity unit-price sub-total-price]}]
   [:tr
