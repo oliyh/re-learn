@@ -63,9 +63,9 @@ cljs.user>
 ```
 
 ## To do
-- Save progress in local storage
-- Context in tutorial e.g. title, progress
-- Versioning in local storage for updated lessons about old things
+- Context in tutorial e.g. title, progress, cancel
+- Can attach lessons to existing dom elements by id or selector
+- Lesson learned criteria can be button or action e.g. clicking on something else
 - Live demo
 
 ## License
