@@ -2,14 +2,20 @@
   (:require [goog.style :as gs]
             [re-frame.core :as re-frame]))
 
+(defn- ->bounds [dom-node]
+  (when-let [bounds (and dom-node (gs/getBounds dom-node))]
+    {:top (.-top bounds)
+     :left (.-left bounds)
+     :width (.-width bounds)
+     :height (.-height bounds)}))
+
 (defn- container-position-style [dom-node position]
-  (let [bounds (gs/getBounds dom-node)
-        top (.-top bounds)
-        left (.-left bounds)
-        width (.-width bounds)
-        height (.-height bounds)]
+  (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
     (cond-> {:position "absolute"}
+      (or (nil? bounds) (= :unattached position))
+      (assoc :top "20%"
+             :left "50%")
 
       (= :top position)
       (assoc :top top
@@ -29,13 +35,11 @@
              :left (+ left (/ width 2))))))
 
 (defn- bubble-position-style [dom-node position]
-  (let [bounds (gs/getBounds dom-node)
-        top (.-top bounds)
-        left (.-left bounds)
-        width (.-width bounds)
-        height (.-height bounds)]
+  (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
     (cond-> {}
+      (or (nil? bounds) (= :unattached position))
+      (assoc :left "-50%")
 
       (= :top position)
       (assoc :top "calc(-100% - 18px)"
@@ -56,7 +60,8 @@
 
 (defn- lesson-bubble [lesson]
   (when @lesson
-    (let [{:keys [id description dom-node position]} @lesson]
+    (let [{:keys [id description dom-node position]} @lesson
+          position (if dom-node position :unattached)]
       [:div.lesson-container {:style (container-position-style dom-node position)}
        [:div {:class (str "lesson " (name position))
               :style (merge

@@ -55,7 +55,11 @@
 (def checkout
   (rlu/with-tutorial
     {:id :checkout-tutorial
-     :lessons [basket
+     :lessons [{:id :welcome
+                :description [:div
+                              [:h2 "Welcome"]
+                              "Welcome to the re-learn example"]}
+               basket
                totals
                purchase-button]}
 

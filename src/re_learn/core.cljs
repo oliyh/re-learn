@@ -27,9 +27,29 @@
 (def ^:private lesson-defaults {:position :right
                                 :version 1})
 
+(defn- add-lesson [lessons {:keys [id] :as lesson}]
+  (assoc lessons id (merge lesson-defaults lesson)))
+
+(defn- add-lessons [lessons new-lessons]
+  (reduce add-lesson lessons new-lessons))
+
+(defn- ->lesson-id [lesson]
+  (cond
+    (keyword? lesson)
+    lesson
+
+    (instance? MetaFn lesson)
+    (::lesson-id (meta lesson))
+
+    (map? lesson)
+    (:id lesson)
+
+    :else
+    lesson))
+
 (re-frame/reg-event-db ::register-lesson [trim-v]
                        (fn [db [{:keys [id] :as lesson}]]
-                         (update db :re-learn/lessons (fnil assoc {}) id (merge lesson-defaults lesson))))
+                         (update db :re-learn/lessons add-lesson lesson)))
 
 (re-frame/reg-event-db ::deregister-lesson [trim-v]
                        (fn [db [lesson-id]]
@@ -43,8 +63,11 @@
                             :local-storage/save [:re-learn/lessons-learned lessons-learned]})))
 
 (re-frame/reg-event-db ::register-tutorial [trim-v]
-                       (fn [db [{:keys [id] :as tutorial}]]
-                         (update db :re-learn/tutorials (fnil assoc {}) id tutorial)))
+                       (fn [db [{:keys [id lessons] :as tutorial}]]
+                         (let [inline-lessons (filter map? lessons)]
+                           (-> db
+                               (update :re-learn/lessons add-lessons inline-lessons)
+                               (update :re-learn/tutorials assoc id (update tutorial :lessons #(map ->lesson-id %)))))))
 
 (re-frame/reg-event-db ::deregister-tutorial [trim-v]
                        (fn [db [tutorial-id]]
