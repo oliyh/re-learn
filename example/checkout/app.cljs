@@ -36,9 +36,10 @@
 (def basket
   (rlu/with-lesson
     {:id :basket-lesson
-     :description "This is your basket where all the items you want to purchase appear"
+     :description "This is your basket where all the items you want to purchase appear. Click on an item to continue."
      :position :left
-     :attach [:#basket :.basket-item]}
+     :attach [:#basket :.basket-item]
+     :continue [:#basket :.basket-item]}
 
     (fn [items]
       [:table#basket.mdl-data-table

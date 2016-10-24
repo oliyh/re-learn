@@ -18,7 +18,11 @@ Annotate reagent render functions with lessons
   (rlu/with-lesson
     {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
-     :position :bottom}
+     :position :bottom         ;; optional, defaults to :right. values are :left, :right, :bottom, :unattached and :top (experimental)
+     :version 2                ;; optional, defaults to 1
+     :attach [:button#some-id] ;; optional, attach lesson to a dommy selector, see https://github.com/plumatic/dommy for use
+     :continue [:table :.tr]   ;; optional, continue when this dommy selector is clicked
+     }
 
     (fn [] [:button.mdl-button.mdl-button--raised "Purchase"])))
 ```
@@ -29,7 +33,9 @@ Combine lessons into tutorials and attach them to views
 (def checkout
   (rlu/with-tutorial
     {:id :checkout-tutorial
-     :lessons [basket
+     :lessons [{:id :welcome-lesson                              ;; this is an inline lesson, not attached to anything
+                :description "Welcome to the re-learn example"}
+               basket
                totals
                purchase-button]}
 
@@ -66,6 +72,7 @@ cljs.user>
 - Context in tutorial e.g. title, progress, cancel
 - Can attach lessons to existing dom elements by id or selector
 - Lesson learned criteria can be button or action e.g. clicking on something else
+- Can unlearn individual tutorials rather than unlearning everything
 - Live demo
 
 ## License

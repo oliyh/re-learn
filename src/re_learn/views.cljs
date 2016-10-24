@@ -1,6 +1,7 @@
 (ns re-learn.views
   (:require [goog.style :as gs]
             [re-frame.core :as re-frame]
+            [reagent.impl.component :as rc]
             [dommy.core :as dom]))
 
 (defn- ->bounds [dom-node]
@@ -59,31 +60,40 @@
       (assoc :top 10
              :left "-50%"))))
 
-(defn- lesson-bubble [lesson]
-  (when @lesson
-    (let [{:keys [id description dom-node position attach]} @lesson
-          dom-node (if attach (dom/sel1 attach) dom-node)
-          position (if dom-node position :unattached)]
-      [:div.lesson-container {:style (container-position-style dom-node position)}
-       [:div {:class (str "lesson " (name position))
-              :style (merge
-                      (bubble-position-style dom-node position)
-                      {:position "relative"
-                       :display "inline-block"
+(def lesson-bubble
+  (with-meta
+    (fn [lesson]
+      (when @lesson
+        (let [{:keys [id description dom-node position attach continue]} @lesson
+              dom-node (if attach (dom/sel1 attach) dom-node)
+              position (if dom-node position :unattached)]
+          [:div.lesson-container {:style (container-position-style dom-node position)}
+           [:div {:class (str "lesson " (name position))
+                  :style (merge
+                          (bubble-position-style dom-node position)
+                          {:position "relative"
+                           :display "inline-block"
 
-                       :padding 8
-                       :border-radius 4
-                       :color "white"
-                       :background-color "rgba(0, 0, 0, 0.8)"})}
-        [:p description]
-        [:button.lesson-learned
-         {:style {:float "right"}
-          :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
-         (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])]]])))
+                           :padding 8
+                           :border-radius 4
+                           :color "white"
+                           :background-color "rgba(0, 0, 0, 0.8)"})}
+            [:p description]
+            (when-not continue
+              [:button.lesson-learned
+               {:style {:float "right"}
+                :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
+               (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
+    {:component-will-update (fn [this]
+                              (when-let [{:keys [id continue] :as lesson} (deref (second (rc/get-argv this)))]
+                                (when continue
+                                  (dom/listen-once! (dom/sel1 continue)
+                                                    :click #(re-frame/dispatch [:tutorial/lesson-learned id])))))}))
 
 (defn all-lessons []
   (let [current-lesson (re-frame/subscribe [:tutorial/current-lesson])]
     (fn []
+
       [lesson-bubble current-lesson])))
 
 (defn tutorial []
