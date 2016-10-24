@@ -2,19 +2,40 @@
   (:require [re-frame.core :as re-frame]
             [reagent.core :as r]
             [re-frame.std-interceptors :refer [trim-v]]
-            [re-learn.views :as views]))
+            [re-learn.views :as views]
+            [cljs.reader :as edn]))
+
+(re-frame/reg-event-fx ::init
+                       [(re-frame/inject-cofx :local-storage :re-learn/lessons-learned)]
+                       (fn [{:keys [db local-storage]}]
+                         {:db (assoc db :re-learn/lessons-learned (:re-learn/lessons-learned local-storage))}))
+
+(re-frame/reg-cofx :local-storage
+                   (fn [coeffects k]
+                     (let [value (some-> (.getItem js/localStorage (name k)) edn/read-string)]
+                       (assoc-in coeffects [:local-storage k] value))))
+
+(re-frame/reg-fx :local-storage/save
+                 (fn [[k v]]
+                   (.setItem js/localStorage (name k) (pr-str v))))
+
+(def ^:private lesson-defaults {:position :right
+                                :version 1})
 
 (re-frame/reg-event-db ::register-lesson [trim-v]
                        (fn [db [{:keys [id] :as lesson}]]
-                         (update db :re-learn/lessons (fnil assoc {}) id lesson)))
+                         (update db :re-learn/lessons (fnil assoc {}) id (merge lesson-defaults lesson))))
 
 (re-frame/reg-event-db ::deregister-lesson [trim-v]
                        (fn [db [lesson-id]]
                          (update db :re-learn/lessons dissoc lesson-id)))
 
-(re-frame/reg-event-db :tutorial/lesson-learned [trim-v]
-                       (fn [db [lesson-id]]
-                         (update db :re-learn/lessons-learned (fnil conj #{}) lesson-id)))
+(re-frame/reg-event-fx :tutorial/lesson-learned [trim-v]
+                       (fn [{:keys [db]} [lesson-id]]
+                         (let [{:keys [version]} (get-in db [:re-learn/lessons lesson-id])
+                               lessons-learned (assoc (:re-learn/lessons-learned db) lesson-id version)]
+                           {:db (assoc db :re-learn/lessons-learned lessons-learned)
+                            :local-storage/save [:re-learn/lessons-learned lessons-learned]})))
 
 (re-frame/reg-event-db ::register-tutorial [trim-v]
                        (fn [db [{:keys [id] :as tutorial}]]
@@ -53,6 +74,9 @@
                 {:keys [id] :as lesson} lessons
                 :when (not (contains? (:re-learn/lessons-learned db) id))]
             lesson))))
+
+(defn init []
+  (re-frame/dispatch-sync [::init]))
 
 (def all-lessons-view views/all-lessons)
 (def tutorial-view views/tutorial)

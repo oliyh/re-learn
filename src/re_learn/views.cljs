@@ -56,8 +56,7 @@
 
 (defn- lesson-bubble [lesson]
   (when @lesson
-    (let [{:keys [id description dom-node position]
-           :or {position :right}} @lesson]
+    (let [{:keys [id description dom-node position]} @lesson]
       [:div.lesson-container {:style (container-position-style dom-node position)}
        [:div.lesson {:class (str "lesson " (name position))
                      :style (merge

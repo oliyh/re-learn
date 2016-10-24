@@ -79,6 +79,8 @@
                                   :quantity 5
                                   :unit-price 0.25
                                   :sub-total-price 1.25}])]
+    (re-learn/init)
+
     (reagent/render [checkout app-state] app-root)
     (reagent/render [re-learn/tutorial-view] tutorial-root)))
 
