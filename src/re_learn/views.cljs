@@ -1,6 +1,7 @@
 (ns re-learn.views
   (:require [goog.style :as gs]
-            [re-frame.core :as re-frame]))
+            [re-frame.core :as re-frame]
+            [dommy.core :as dom]))
 
 (defn- ->bounds [dom-node]
   (when-let [bounds (and dom-node (gs/getBounds dom-node))]
@@ -60,7 +61,8 @@
 
 (defn- lesson-bubble [lesson]
   (when @lesson
-    (let [{:keys [id description dom-node position]} @lesson
+    (let [{:keys [id description dom-node position attach]} @lesson
+          dom-node (if attach (dom/sel1 attach) dom-node)
           position (if dom-node position :unattached)]
       [:div.lesson-container {:style (container-position-style dom-node position)}
        [:div {:class (str "lesson " (name position))

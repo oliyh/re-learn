@@ -28,7 +28,7 @@
        [:td (reduce + (map :sub-total-price @items))]])))
 
 (defn- basket-item [{:keys [name quantity unit-price sub-total-price]}]
-  [:tr
+  [:tr.basket-item
    [:td name]
    [:td quantity " @ " unit-price]
    [:td sub-total-price]])
@@ -37,10 +37,11 @@
   (rlu/with-lesson
     {:id :basket-lesson
      :description "This is your basket where all the items you want to purchase appear"
-     :position :left}
+     :position :left
+     :attach [:#basket :.basket-item]}
 
     (fn [items]
-      [:table.mdl-data-table
+      [:table#basket.mdl-data-table
        [:thead
         [:tr
          [:th "Name"]
