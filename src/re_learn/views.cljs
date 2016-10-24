@@ -58,16 +58,16 @@
   (when @lesson
     (let [{:keys [id description dom-node position]} @lesson]
       [:div.lesson-container {:style (container-position-style dom-node position)}
-       [:div.lesson {:class (str "lesson " (name position))
-                     :style (merge
-                             (bubble-position-style dom-node position)
-                             {:position "relative"
-                              :display "inline-block"
+       [:div {:class (str "lesson " (name position))
+              :style (merge
+                      (bubble-position-style dom-node position)
+                      {:position "relative"
+                       :display "inline-block"
 
-                              :padding 8
-                              :border-radius 4
-                              :color "white"
-                              :background-color "rgba(0, 0, 0, 0.8)"})}
+                       :padding 8
+                       :border-radius 4
+                       :color "white"
+                       :background-color "rgba(0, 0, 0, 0.8)"})}
         [:p description]
         [:button.lesson-learned
          {:style {:float "right"}
