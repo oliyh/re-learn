@@ -63,7 +63,10 @@
       [:div {:style {:width "200px"
                      :margin "200px auto"}}
        [basket app-state]
-       [actions]])))
+       [actions]
+       [:p [:a {:href "#"
+                :on-click re-learn/reset-education!}
+            "Help"]]])))
 
 (defn- init []
   (let [app-root (js/document.getElementById "app")

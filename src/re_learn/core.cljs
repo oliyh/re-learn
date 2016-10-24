@@ -19,6 +19,11 @@
                  (fn [[k v]]
                    (.setItem js/localStorage (name k) (pr-str v))))
 
+(re-frame/reg-event-fx ::hard-reset
+                       (fn [{:keys [db]}]
+                         {:db (assoc db :re-learn/lessons-learned {})
+                          :local-storage/save [:re-learn/lessons-learned {}]}))
+
 (def ^:private lesson-defaults {:position :right
                                 :version 1})
 
@@ -77,6 +82,9 @@
 
 (defn init []
   (re-frame/dispatch-sync [::init]))
+
+(defn reset-education! []
+  (re-frame/dispatch [::hard-reset]))
 
 (def all-lessons-view views/all-lessons)
 (def tutorial-view views/tutorial)
