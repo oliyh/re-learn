@@ -63,21 +63,28 @@
 (defn deregister-tutorial [tutorial-id]
   (fn [_] (re-frame/dispatch [::deregister-tutorial tutorial-id])))
 
+(defn- already-learned?
+  ([lessons-learned]
+   (fn [{:keys [id version]}]
+     (and (contains? lessons-learned id)
+          (<= version (get lessons-learned id)))))
+  ([lessons-learned lesson]
+   ((already-learned? lessons-learned) lesson)))
+
 (re-frame/reg-sub
  :tutorial/current-lesson
  (fn [db]
    (->> (:re-learn/lessons db)
         vals
-        (remove (comp (or (:re-learn/lessons-learned db) #{}) :id))
+        (remove (already-learned? (:re-learn/lessons-learned db)))
         first)))
 
 (re-frame/reg-sub
  :tutorial/current-tutorial
  (fn [db]
    (first (for [{:keys [lessons] :as tutorial} (vals (:re-learn/tutorials db))
-                :let [lessons (keep (:re-learn/lessons db) lessons)]
-                {:keys [id] :as lesson} lessons
-                :when (not (contains? (:re-learn/lessons-learned db) id))]
+                lesson (keep (:re-learn/lessons db) lessons)
+                :when (not (already-learned? (:re-learn/lessons-learned db) lesson))]
             lesson))))
 
 (defn init []
