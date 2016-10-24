@@ -46,7 +46,7 @@
                        (fn [db [{:keys [id] :as tutorial}]]
                          (update db :re-learn/tutorials (fnil assoc {}) id tutorial)))
 
-(re-frame/reg-event-db ::deregister-lesson [trim-v]
+(re-frame/reg-event-db ::deregister-tutorial [trim-v]
                        (fn [db [tutorial-id]]
                          (update db :re-learn/tutorials dissoc tutorial-id)))
 
