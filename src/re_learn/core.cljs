@@ -3,7 +3,8 @@
             [reagent.core :as r]
             [re-frame.std-interceptors :refer [trim-v]]
             [re-learn.views :as views]
-            [cljs.reader :as edn]))
+            [cljs.reader :as edn]
+            [dommy.core :as dom]))
 
 (re-frame/reg-event-fx ::init
                        [(re-frame/inject-cofx :local-storage :re-learn/lessons-learned)]
@@ -23,6 +24,10 @@
                        (fn [{:keys [db]}]
                          {:db (assoc db :re-learn/lessons-learned {})
                           :local-storage/save [:re-learn/lessons-learned {}]}))
+
+(re-frame/reg-fx :on-dom-event
+                 (fn [[action selector on-event]]
+                   (dom/listen-once! (dom/sel1 selector) action on-event)))
 
 (def ^:private lesson-defaults {:position :right
                                 :version 1})
@@ -73,6 +78,10 @@
                        (fn [db [tutorial-id]]
                          (update db :re-learn/tutorials dissoc tutorial-id)))
 
+(re-frame/reg-event-fx :tutorial/prepare-lesson [trim-v]
+                       (fn [{:keys [db]} [lesson-id]]
+                         (when-let [continue (get-in db [:re-learn/lessons lesson-id :continue])]
+                           {:on-dom-event [:click continue #(re-frame/dispatch [:tutorial/lesson-learned lesson-id])]})))
 
 (defn register-lesson [lesson]
   (fn [this] (re-frame/dispatch [::register-lesson (assoc lesson :dom-node (r/dom-node this))])))

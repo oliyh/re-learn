@@ -60,6 +60,9 @@
       (assoc :top 10
              :left "-50%"))))
 
+(defn- extract-lesson [component]
+  (deref (second (rc/get-argv component))))
+
 (def lesson-bubble
   (with-meta
     (fn [lesson]
@@ -78,17 +81,15 @@
                            :border-radius 4
                            :color "white"
                            :background-color "rgba(0, 0, 0, 0.8)"})}
-            [:p description]
+            (if (string? description)
+              [:p description]
+              description)
             (when-not continue
               [:button.lesson-learned
                {:style {:float "right"}
                 :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
-    {:component-will-update (fn [this]
-                              (when-let [{:keys [id continue] :as lesson} (deref (second (rc/get-argv this)))]
-                                (when continue
-                                  (dom/listen-once! (dom/sel1 continue)
-                                                    :click #(re-frame/dispatch [:tutorial/lesson-learned id])))))}))
+    {:component-will-update #(re-frame/dispatch [:tutorial/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn all-lessons []
   (let [current-lesson (re-frame/subscribe [:tutorial/current-lesson])]
