@@ -2,7 +2,8 @@
   (:require [goog.style :as gs]
             [re-frame.core :as re-frame]
             [reagent.impl.component :as rc]
-            [dommy.core :as dom]))
+            [dommy.core :as dom]
+            [re-learn.core :as re-learn]))
 
 (defn- ->bounds [dom-node]
   (when-let [bounds (and dom-node (gs/getBounds dom-node))]
@@ -87,17 +88,17 @@
             (when-not continue
               [:button.lesson-learned
                {:style {:float "right"}
-                :on-click #(re-frame/dispatch [:tutorial/lesson-learned id])}
+                :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
-    {:component-will-update #(re-frame/dispatch [:tutorial/prepare-lesson (:id (extract-lesson %))])}))
+    {:component-will-update #(re-frame/dispatch [::re-learn/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn all-lessons []
-  (let [current-lesson (re-frame/subscribe [:tutorial/current-lesson])]
+  (let [current-lesson (re-frame/subscribe [::re-learn/current-lesson])]
     (fn []
 
       [lesson-bubble current-lesson])))
 
 (defn tutorial []
-  (let [current-lesson (re-frame/subscribe [:tutorial/current-tutorial])]
+  (let [current-lesson (re-frame/subscribe [::re-learn/current-tutorial])]
     (fn []
       [lesson-bubble current-lesson])))

@@ -1,6 +1,7 @@
 (ns checkout.app
   (:require [re-learn.core :as re-learn]
             [re-learn.utils :as rlu]
+            [re-learn.views :as re-learn-views]
             [reagent.core :as reagent]))
 
 (def purchase-button
@@ -74,6 +75,9 @@
                 :on-click re-learn/reset-education!}
             "Help"]]])))
 
+(defn- on-figwheel-reload []
+  (reagent/force-update-all))
+
 (defn- init []
   (let [app-root (js/document.getElementById "app")
         tutorial-root (js/document.getElementById "tutorial")
@@ -91,6 +95,6 @@
     (re-learn/init)
 
     (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn/tutorial-view] tutorial-root)))
+    (reagent/render [re-learn-views/tutorial] tutorial-root)))
 
 (.addEventListener js/document "DOMContentLoaded" init)

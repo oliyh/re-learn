@@ -21,7 +21,7 @@
   :aliases {"test" ["do" ["clean"] ["test"] ["doo" "nashorn" "test" "once"]]}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/" "example/"]
-                        :figwheel true
+                        :figwheel {:on-jsload "checkout.app/on-figwheel-reload"}
                         :compiler {:main "checkout.app"
                                    :asset-path "js/out"
                                    :output-to "example-resources/public/js/checkout.js"
