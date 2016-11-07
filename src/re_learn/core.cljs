@@ -106,9 +106,11 @@
  ::current-tutorial
  (fn [db]
    (first (for [{:keys [lessons] :as tutorial} (vals (::tutorials db))
-                lesson (keep (::lessons db) lessons)
-                :when (not (already-learned? (::lessons-learned db) lesson))]
-            lesson))))
+                :let [to-learn (remove #(already-learned? (::lessons-learned db) %) (keep (::lessons db) lessons))]
+                lesson to-learn]
+            {:tutorial tutorial
+             :completion (- 1 (/ (dec (count to-learn)) (count lessons)))
+             :current-lesson lesson}))))
 
 (defn init []
   (re-frame/dispatch-sync [::init]))

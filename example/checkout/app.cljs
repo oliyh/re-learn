@@ -58,6 +58,8 @@
 (def checkout
   (rlu/with-tutorial
     {:id :checkout-tutorial
+     :name "The checkout"
+     :description "Review your basket, check the price and confirm your purchase"
      :lessons [{:id :welcome
                 :description [:div
                               [:h2 "Welcome"]

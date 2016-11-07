@@ -62,13 +62,13 @@
              :left "-50%"))))
 
 (defn- extract-lesson [component]
-  (deref (second (rc/get-argv component))))
+  (:current-lesson (deref (second (rc/get-argv component)))))
 
 (def lesson-bubble
   (with-meta
-    (fn [lesson]
-      (when @lesson
-        (let [{:keys [id description dom-node position attach continue]} @lesson
+    (fn [tutorial]
+      (when (:current-lesson @tutorial)
+        (let [{:keys [id description dom-node position attach continue]} (:current-lesson @tutorial)
               dom-node (if attach (dom/sel1 attach) dom-node)
               position (if dom-node position :unattached)]
           [:div.lesson-container {:style (container-position-style dom-node position)}
@@ -92,13 +92,35 @@
                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
     {:component-will-update #(re-frame/dispatch [::re-learn/prepare-lesson (:id (extract-lesson %))])}))
 
-(defn all-lessons []
-  (let [current-lesson (re-frame/subscribe [::re-learn/current-lesson])]
-    (fn []
+(defn lesson-context [context]
+  (when @context
+    [:div.lesson-context-container {:style {:position "fixed"
+                                            :bottom 0
+                                            :width "100%"
+                                            :box-sizing "border-box"
+                                            :padding 24
+                                            :background-color "rgba(0, 0, 0, 0.8)"
+                                            :color "white"}}
+     [:h2 (get-in @context [:tutorial :name])]
+     [:p (get-in @context [:tutorial :description])]
+     [:div.tutorial-progress {:style {:width "100%"
+                                      :height "20px"
+                                      :border "1px solid darkgray"}}
+      [:div {:style {:position "relative"
+                     :background-color "lightblue"
+                     :transition "width 500ms ease-out"
+                     :width (str (* 100 (:completion @context)) "%")
+                     :height "100%"}}]]]))
 
-      [lesson-bubble current-lesson])))
+(defn all-lessons []
+  (let [lesson (re-frame/subscribe [::re-learn/current-lesson])]
+    (fn []
+      [lesson-bubble lesson])))
 
 (defn tutorial []
-  (let [current-lesson (re-frame/subscribe [::re-learn/current-tutorial])]
+  (let [tutorial (re-frame/subscribe [::re-learn/current-tutorial])]
     (fn []
-      [lesson-bubble current-lesson])))
+      [:div
+       [lesson-bubble tutorial]
+       ;;[lesson-context tutorial]
+       ])))
