@@ -1,5 +1,6 @@
 (ns re-learn.views
   (:require [goog.style :as gs]
+            [goog.string :as gstring]
             [re-frame.core :as re-frame]
             [reagent.impl.component :as rc]
             [dommy.core :as dom]
@@ -103,14 +104,44 @@
                                             :color "white"}}
      [:h2 (get-in @context [:tutorial :name])]
      [:p (get-in @context [:tutorial :description])]
-     [:div.tutorial-progress {:style {:width "100%"
-                                      :height "20px"
-                                      :border "1px solid darkgray"}}
-      [:div {:style {:position "relative"
-                     :background-color "lightblue"
-                     :transition "width 500ms ease-out"
-                     :width (str (* 100 (:completion @context)) "%")
-                     :height "100%"}}]]]))
+
+
+     [:div {:style {:text-align "center"}}
+      [:div {:style {:line-height "2em" :font-size "3em"}}
+       [:a {:style {:cursor "pointer"}
+            :on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+        (gstring/unescapeEntities "&#10096;")]
+       [:span {:style {:vertical-align "middle"}} (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
+       [:a {:style {:cursor "pointer"}
+            :on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+        (gstring/unescapeEntities "&#10097;")]]]
+
+     [:div
+
+      [:div.tutorial-progress {:style {:width "100%"
+                                       :height "10px"
+                                       :border "1px solid lightgreen"
+                                       :text-align "center"}}
+       [:div {:style {:position "relative"
+                      :background-color "green"
+                      :transition "width 500ms ease-out"
+                      :width (str (* 100 (get-in @context [:completion :ratio])) "%")
+                      :height "100%"}}]]
+
+      [:div {:style {:display "table" :width "100%" :table-layout "fixed" :margin-top -17}}
+       (for [{:keys [id]} (:learned @context)]
+         ^{:key (str "progress" id)}
+         [:div {:style {:display "table-cell" :width "2%" :text-align "center"}}
+          [:div {:style {:margin "0 auto" :width 20 :height 20 :border-radius 20 :border "1px solid lightgreen" :background-color "green"}}]
+          id])
+
+       (for [{:keys [id]} (:to-learn @context)]
+         ^{:key (str "progress" id)}
+         [:div {:style {:display "table-cell" :width "2%" :text-align "center"}}
+          [:div {:style {:margin "0 auto" :width 20 :height 20 :border-radius 20 :border "1px solid pink" :background-color "red" :position "relative"}}]
+          id])]]
+
+]))
 
 (defn all-lessons []
   (let [lesson (re-frame/subscribe [::re-learn/current-lesson])]
@@ -122,5 +153,4 @@
     (fn []
       [:div
        [lesson-bubble tutorial]
-       ;;[lesson-context tutorial]
-       ])))
+       [lesson-context tutorial]])))

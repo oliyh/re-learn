@@ -105,11 +105,20 @@
 (re-frame/reg-sub
  ::current-tutorial
  (fn [db]
-   (first (for [{:keys [lessons] :as tutorial} (vals (::tutorials db))
-                :let [to-learn (remove #(already-learned? (::lessons-learned db) %) (keep (::lessons db) lessons))]
-                lesson to-learn]
+   (first (for [tutorial (vals (::tutorials db))
+                :let [lessons (keep (::lessons db) (:lessons tutorial))
+                      to-learn (remove #(already-learned? (::lessons-learned db) %) lessons)]
+                lesson to-learn
+                :let [total (count lessons)
+                      to-learn to-learn
+                      learned (filter #(already-learned? (::lessons-learned db) %) lessons)]]
             {:tutorial tutorial
-             :completion (- 1 (/ (dec (count to-learn)) (count lessons)))
+             :learned learned
+             :to-learn to-learn
+             :completion {:ratio (/ (+ (count learned) 0.5) total)
+                          :total total
+                          :learned (inc (count learned))
+                          :to-learn (count to-learn)}
              :current-lesson lesson}))))
 
 (defn init []
