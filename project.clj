@@ -15,7 +15,8 @@
                    :exclusions [[org.clojure/tools.reader]]
                    :dependencies [[org.clojure/tools.reader "0.10.0"]
                                   [com.cemerick/piggieback "0.2.1"]
-                                  [figwheel-sidecar "0.5.2"]]
+                                  [figwheel-sidecar "0.5.2"]
+                                  [devcards "0.2.2"]]
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
   :aliases {"test" ["do" ["clean"] ["test"] ["doo" "nashorn" "test" "once"]]}
@@ -26,6 +27,14 @@
                                    :asset-path "js/out"
                                    :output-to "example-resources/public/js/checkout.js"
                                    :output-dir "example-resources/public/js/out"}}
+                       {:id "devcards"
+                        :figwheel {:devcards true}
+                        :source-paths ["src" "example"]
+                        :compiler {:main "devcards.runner"
+                                   :asset-path "js/devcards"
+                                   :output-to "resources/public/js/devcards.js"
+                                   :output-dir "resources/public/js/devcards"
+                                   :source-map-timestamp true}}
                        {:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-to "target/unit-test.js"
