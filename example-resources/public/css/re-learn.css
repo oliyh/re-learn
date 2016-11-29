@@ -1,3 +1,8 @@
+#tutorial {
+    top: 0;
+    left: 0;
+}
+
 .lesson {
     z-index: 10000;
 }

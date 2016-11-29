@@ -16,7 +16,9 @@
 (defn- container-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
-    (cond-> {:position "absolute"}
+    (cond-> {:position "absolute"
+             :height 0
+             :width 0}
       (or (nil? bounds) (= :unattached position))
       (assoc :top "20%"
              :left "50%")
@@ -32,11 +34,13 @@
 
       (= :left position)
       (assoc :top (+ top (/ height 2))
-             :left left)
+             :left left
+             :width "initial")
 
       (= :bottom position)
       (assoc :top (+ top height)
-             :left (+ left (/ width 2))))))
+             :left (+ left (/ width 2))
+             :width "initial"))))
 
 (defn- bubble-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
