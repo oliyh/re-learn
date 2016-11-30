@@ -7,4 +7,6 @@
 
 (defn stop [] (ra/stop-figwheel!))
 
-(defn cljs [] (ra/cljs-repl "dev"))
+(defn cljs
+  ([] (cljs :dev))
+  ([build-id] (ra/cljs-repl build-id)))

@@ -17,10 +17,14 @@
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
     (cond-> {:position "absolute"
+             :top top
+             :left left
              :height 0
              :width 0}
       (or (nil? bounds) (= :unattached position))
-      (assoc :top "20%"
+      (assoc :width width
+             :height height
+             :top "20%"
              :left "50%")
 
       (= :top position)
@@ -29,42 +33,49 @@
              :left (+ left (/ width 2)))
 
       (= :right position)
-      (assoc :top (+ top (/ height 2))
-             :left (+ left width))
+      (assoc :height height)
 
       (= :left position)
-      (assoc :top (+ top (/ height 2))
-             :left left
-             :width "initial")
+      (assoc :height height)
 
       (= :bottom position)
-      (assoc :top (+ top height)
-             :left (+ left (/ width 2))
-             :width "initial"))))
+      (assoc :width width))))
+
+(def arrow-offset-top 40)
+(def arrow-width 10)
 
 (defn- bubble-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
-    (cond-> {}
+    (cond-> {:position "relative"
+             :display "block"
+             :padding 8
+             :border-radius 4
+             :color "white"
+             :background-color "rgba(0, 0, 0, 0.8)"
+             :min-width (- width (* 8 2))}
       (or (nil? bounds) (= :unattached position))
-      (assoc :left "-50%")
+      (assoc :left 0)
 
       (= :top position)
       (assoc :top "calc(-100% - 18px)"
              :height 90
-             :left "-50%")
+             :right "-50%")
 
       (= :right position)
-      (assoc :top -40
-             :left 10)
+      (assoc :top (- (/ height 2) arrow-offset-top)
+             :left (+ width arrow-width))
 
       (= :left position)
-      (assoc :top -40
-             :left "calc(-100% - 10px)")
+      (assoc :top (- (/ height 2) arrow-offset-top)
+             :right (+ arrow-width width))
 
       (= :bottom position)
-      (assoc :top 10
-             :left "-50%"))))
+      (assoc :top (+ height 10)
+             ;;:left (/ width 2)
+             :left (str "calc(-50% + " (/ width 2) ")")
+             ;;:right (/ width 2)
+             ))))
 
 (defn- extract-lesson [component]
   (:current-lesson (deref (second (rc/get-argv component)))))
@@ -78,23 +89,16 @@
               position (if dom-node position :unattached)]
           [:div.lesson-container {:style (container-position-style dom-node position)}
            [:div {:class (str "lesson " (name position))
-                  :style (merge
-                          (bubble-position-style dom-node position)
-                          {:position "relative"
-                           :display "inline-block"
-
-                           :padding 8
-                           :border-radius 4
-                           :color "white"
-                           :background-color "rgba(0, 0, 0, 0.8)"})}
-            (if (string? description)
-              [:p description]
-              description)
-            (when-not continue
-              [:button.lesson-learned
-               {:style {:float "right"}
-                :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
-               (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
+                  :style (bubble-position-style dom-node position)}
+            [:div {:style {:display "inline-block"}}
+             (if (string? description)
+               [:p description]
+               description)
+             (when-not continue
+               [:button.lesson-learned
+                {:style {:float "right"}
+                 :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
+                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]]])))
     {:component-will-update #(re-frame/dispatch [::re-learn/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn lesson-context [context]
