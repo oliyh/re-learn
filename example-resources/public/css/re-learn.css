@@ -60,21 +60,39 @@
     display: inline-block;
 }
 
+.tutorial-description h2 {
+    margin-top: 0;
+}
+
 .tutorial-completion {
     text-align: center;
 }
 
-.tutorial-navigation {
+.lesson-navigation {
     width: 20%;
     display: inline-block;
     text-align: center;
     line-height: 2em;
     font-size: 3em;
+    vertical-align: bottom;
+}
+
+.lesson-navigation span {
     vertical-align: middle;
 }
 
-.tutorial-navigation a {
+.tutorial-controls a, .lesson-navigation a {
     cursor: pointer;
+}
+
+.tutorial-controls {
+    width: 40%;
+    display: inline-block;
+    text-align: center;
+    line-height: 1em;
+    font-size: 1.5em;
+    vertical-align: top;
+    text-align: right;
 }
 
 .tutorial-progress {
@@ -86,7 +104,7 @@
 
 .tutorial-progress-bar {
     position: relative;
-    background-color: green;
+    background-color: lightgreen;
     transition: width 250ms ease-in-out;
     height: 100%;
 }
@@ -115,10 +133,10 @@
 
 .progress-step.complete > div {
     border: 1px solid lightgreen;
-    background-color: green;
+    background-color: darkgreen;
 }
 
 .progress-step.incomplete > div {
-    border: 1px solid pink;
-    background-color: red;
+    border: 1px solid lightgreen;
+    background-color: rgb(255,64,129);
 }

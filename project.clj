@@ -21,6 +21,7 @@
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
   :aliases {"test" ["do" ["clean"] ["test"] ["doo" "nashorn" "test" "once"]]}
+  :figwheel {:css-dirs ["example-resources/public/css"]}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/" "example/"]
                         :figwheel {:on-jsload "checkout.app/on-figwheel-reload"}

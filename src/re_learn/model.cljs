@@ -55,9 +55,12 @@
 
 (re-frame/reg-event-fx ::lesson-learned
                        interceptors
-                       (fn [{:keys [db]} [lesson-id]]
-                         (let [{:keys [version]} (get-in db [:lessons lesson-id])
-                               lessons-learned (assoc (:lessons-learned db) lesson-id version)]
+                       (fn [{:keys [db]} lesson-ids]
+                         (let [lessons-learned (reduce (fn [learned lesson-id]
+                                                         (assoc learned lesson-id
+                                                                (get-in db [:lessons lesson-id :version])))
+                                                       (:lessons-learned db)
+                                                       lesson-ids)]
                            {:db (assoc db :lessons-learned lessons-learned)
                             ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
 

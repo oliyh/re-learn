@@ -109,6 +109,6 @@
     (re-learn/init)
 
     (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn-views/tutorial] tutorial-root)))
+    (reagent/render [re-learn-views/tutorial {:context? true}] tutorial-root)))
 
 (.addEventListener js/document "DOMContentLoaded" init)

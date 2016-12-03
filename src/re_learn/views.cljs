@@ -90,12 +90,16 @@
       [:p (get-in @context [:tutorial :description])]]
 
      (when (pos? (get-in @context [:completion :total]))
-       [:div.tutorial-navigation
+       [:div.lesson-navigation
         [:a {:on-click #(re-frame/dispatch [::model/lesson-unlearned (get-in @context [:previous-lesson :id])])}
          (gstring/unescapeEntities "&#10096;")]
         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
         [:a {:on-click #(re-frame/dispatch [::model/lesson-learned (get-in @context [:current-lesson :id])])}
          (gstring/unescapeEntities "&#10097;")]])
+
+     [:div.tutorial-controls
+      [:a {:on-click #(re-frame/dispatch (into [::model/lesson-learned] (map :id (:to-learn @context))))}
+       "SKIP " (gstring/unescapeEntities "&#10219")]]
 
      (when (pos? (get-in @context [:completion :total]))
        [:div.tutorial-completion
@@ -106,21 +110,22 @@
          (for [{:keys [id]} (:learned @context)]
            ^{:key (str "progress" id)}
            [:div.progress-step.complete
-            [:div] id])
+            [:div]])
 
          (for [{:keys [id]} (:to-learn @context)]
            ^{:key (str "progress" id)}
            [:div.progress-step.incomplete
-            [:div] id])]])]))
+            [:div]])]])]))
 
 (defn all-lessons []
   (let [lesson (re-frame/subscribe [::model/current-lesson])]
     (fn []
       [lesson-bubble lesson])))
 
-(defn tutorial []
+(defn tutorial [{:keys [context?]}]
   (let [tutorial (re-frame/subscribe [::model/current-tutorial])]
     (fn []
       [:div
        [lesson-bubble tutorial]
-       [lesson-context tutorial]])))
+       (when context?
+         [lesson-context tutorial])])))
