@@ -40,3 +40,77 @@
 	  top: 50%;
 	  border-left-color: rgba(0, 0, 0, 0.8);
 }
+
+/* tutorial context */
+
+.lesson-context-container {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2em;
+}
+
+.tutorial-completion {
+    text-align: center;
+}
+
+.lesson-navigation {
+    line-height: 2em;
+    font-size: 3em;
+    vertical-align: middle;
+}
+
+.lesson-navigation a {
+    cursor: pointer;
+}
+
+.tutorial-progress {
+    width: 100%;
+    height: 10px;
+    border: 1px solid lightgreen;
+    text-align: center;
+}
+
+.tutorial-progress-bar {
+    position: relative;
+    background-color: green;
+    transition: width 250ms ease-in-out;
+    height: 100%;
+}
+
+.tutorial-progress-steps {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin-top: -17px;
+    margin-bottom: 10px;
+}
+
+.progress-step {
+    display: table-cell;
+    width: 2%;
+    text-align: center;
+}
+
+.progress-step > div {
+    position: relative;
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+}
+
+.progress-step.complete > div {
+    border: 1px solid lightgreen;
+    background-color: green;
+}
+
+.progress-step.incomplete > div {
+    border: 1px solid pink;
+    background-color: red;
+}

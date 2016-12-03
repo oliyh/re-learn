@@ -84,53 +84,33 @@
 
 (defn lesson-context [context]
   (when @context
-    [:div.lesson-context-container {:style {:position "fixed"
-                                            :bottom 0
-                                            :width "100%"
-                                            :box-sizing "border-box"
-                                            :padding 24
-                                            :background-color "rgba(0, 0, 0, 0.8)"
-                                            :color "white"}}
+    [:div.lesson-context-container
      [:h2 (get-in @context [:tutorial :name])]
      [:p (get-in @context [:tutorial :description])]
 
+     (when (pos? (get-in @context [:completion :total]))
+       [:div
+        [:div.tutorial-completion
+         [:div.lesson-navigation
+          [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+           (gstring/unescapeEntities "&#10096;")]
+          [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
+          [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+           (gstring/unescapeEntities "&#10097;")]]]
 
-     [:div {:style {:text-align "center"}}
-      [:div {:style {:line-height "2em" :font-size "3em"}}
-       [:a {:style {:cursor "pointer"}
-            :on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
-        (gstring/unescapeEntities "&#10096;")]
-       [:span {:style {:vertical-align "middle"}} (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
-       [:a {:style {:cursor "pointer"}
-            :on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
-        (gstring/unescapeEntities "&#10097;")]]]
+        [:div.tutorial-progress
+         [:div.tutorial-progress-bar {:style {:width (str (* 100 (get-in @context [:completion :ratio])) "%")}}]]
 
-     [:div
+        [:div.tutorial-progress-steps
+         (for [{:keys [id]} (:learned @context)]
+           ^{:key (str "progress" id)}
+           [:div.progress-step.complete
+            [:div] id])
 
-      [:div.tutorial-progress {:style {:width "100%"
-                                       :height "10px"
-                                       :border "1px solid lightgreen"
-                                       :text-align "center"}}
-       [:div {:style {:position "relative"
-                      :background-color "green"
-                      :transition "width 500ms ease-out"
-                      :width (str (* 100 (get-in @context [:completion :ratio])) "%")
-                      :height "100%"}}]]
-
-      [:div {:style {:display "table" :width "100%" :table-layout "fixed" :margin-top -17}}
-       (for [{:keys [id]} (:learned @context)]
-         ^{:key (str "progress" id)}
-         [:div {:style {:display "table-cell" :width "2%" :text-align "center"}}
-          [:div {:style {:margin "0 auto" :width 20 :height 20 :border-radius 20 :border "1px solid lightgreen" :background-color "green"}}]
-          id])
-
-       (for [{:keys [id]} (:to-learn @context)]
-         ^{:key (str "progress" id)}
-         [:div {:style {:display "table-cell" :width "2%" :text-align "center"}}
-          [:div {:style {:margin "0 auto" :width 20 :height 20 :border-radius 20 :border "1px solid pink" :background-color "red" :position "relative"}}]
-          id])]]
-
-]))
+         (for [{:keys [id]} (:to-learn @context)]
+           ^{:key (str "progress" id)}
+           [:div.progress-step.incomplete
+            [:div] id])]])]))
 
 (defn all-lessons []
   (let [lesson (re-frame/subscribe [::re-learn/current-lesson])]
