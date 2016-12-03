@@ -43,7 +43,7 @@
 
 /* tutorial context */
 
-.lesson-context-container {
+.tutorial-context-container {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -55,17 +55,25 @@
     padding: 2em;
 }
 
+.tutorial-description {
+    width: 40%;
+    display: inline-block;
+}
+
 .tutorial-completion {
     text-align: center;
 }
 
-.lesson-navigation {
+.tutorial-navigation {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
     line-height: 2em;
     font-size: 3em;
     vertical-align: middle;
 }
 
-.lesson-navigation a {
+.tutorial-navigation a {
     cursor: pointer;
 }
 
