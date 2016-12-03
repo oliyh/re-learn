@@ -21,3 +21,6 @@
 
 (defn reset-education! []
   (re-frame/dispatch [::model/hard-reset]))
+
+(defn enable-help-mode! []
+  (re-frame/dispatch [::model/help-mode true]))

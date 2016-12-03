@@ -55,15 +55,26 @@
                  [basket-item item]))
         [totals items]]])))
 
-(def help-link
+(def re-learn-link
   (rlu/with-lesson
-    {:id :help
+    {:id :re-learn
      :description "Click here to run the tutorial again"
-     :position :bottom}
+     :position :left}
 
     (fn []
       [:a {:href "#"
            :on-click re-learn/reset-education!}
+       "Re-learn"])))
+
+(def help-link
+  (rlu/with-lesson
+    {:id :help
+     :description "Click here to enter help mode and discover what everything does"
+     :position :bottom}
+
+    (fn []
+      [:a {:href "#"
+           :on-click re-learn/enable-help-mode!}
        "Help"])))
 
 (def checkout
@@ -78,6 +89,7 @@
                basket
                totals
                purchase-button
+               re-learn-link
                :help]}
 
     (fn [app-state]
@@ -87,7 +99,9 @@
                      :transform "translate(-50%, -50%)"}}
        [basket app-state]
        [actions]
-       [help-link]])))
+       [:ul {:style {:margin-top 24}}
+        [:li [re-learn-link]]
+        [:li [help-link]]]])))
 
 (defn- on-figwheel-reload []
   (reagent/force-update-all))

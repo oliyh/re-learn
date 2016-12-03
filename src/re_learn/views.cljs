@@ -4,7 +4,8 @@
             [re-frame.core :as re-frame]
             [re-learn.model :as model]
             [reagent.impl.component :as rc]
-            [dommy.core :as dom]))
+            [dommy.core :as dom]
+            [reagent.core :as r]))
 
 (defn- ->bounds [dom-node]
   (when-let [bounds (and dom-node (gs/getBounds dom-node))]
@@ -56,35 +57,40 @@
              :left (/ width 2)
              :transform (str "translateX(-50%)")))))
 
-(defn- extract-lesson [component]
-  (:current-lesson (deref (second (rc/get-argv component)))))
+(defn- lesson-bubble [{:keys [id description dom-node position attach continue] :as lesson}]
+  (let [dom-node (if attach (dom/sel1 attach) dom-node)
+        position (if dom-node position :unattached)]
+    [:div {:id (name id)
+           :class (str "lesson " (name position))
+           :style (bubble-position-style dom-node position)}
+     (if (string? description)
+       [:p description]
+       description)
+     (when-not continue
+       [:button.lesson-learned
+        {:style {:float "right"}
+         :on-click #(re-frame/dispatch [::model/lesson-learned id])}
+        (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]))
 
-(def lesson-bubble
+(defn- extract-lesson [component]
+  (def c component)
+  (second (rc/get-argv component)))
+
+(def lesson-view
   (with-meta
-    (fn [tutorial]
-      (when (:current-lesson @tutorial)
-        (let [{:keys [id description dom-node position attach continue]} (:current-lesson @tutorial)
-              dom-node (if attach (dom/sel1 attach) dom-node)
+    (fn [{:keys [id dom-node position attach] :as lesson}]
+      (when lesson
+        (let [dom-node (if attach (dom/sel1 attach) dom-node)
               position (if dom-node position :unattached)]
           [:div {:id (str (name id) "-container")
                  :class (str "lesson-container " (name position))
                  :style (container-position-style dom-node position)}
-           [:div {:id (name id)
-                  :class (str "lesson " (name position))
-                  :style (bubble-position-style dom-node position)}
-            (if (string? description)
-              [:p description]
-              description)
-            (when-not continue
-              [:button.lesson-learned
-               {:style {:float "right"}
-                :on-click #(re-frame/dispatch [::model/lesson-learned id])}
-               (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
-    {:component-will-update #(re-frame/dispatch [::model/prepare-lesson (:id (extract-lesson %))])}))
+           [lesson-bubble lesson]])))
+    {:component-did-update #(re-frame/dispatch [::model/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn lesson-context [context]
   (when @context
-    [:div.tutorial-context-container
+    [:div.context-container
      [:div.tutorial-description
       [:h2 (get-in @context [:tutorial :name])]
       [:p (get-in @context [:tutorial :description])]]
@@ -97,7 +103,7 @@
         [:a {:on-click #(re-frame/dispatch [::model/lesson-learned (get-in @context [:current-lesson :id])])}
          (gstring/unescapeEntities "&#10097;")]])
 
-     [:div.tutorial-controls
+     [:div.context-controls
       [:a {:on-click #(re-frame/dispatch (into [::model/lesson-learned] (map :id (:to-learn @context))))}
        "SKIP " (gstring/unescapeEntities "&#10219")]]
 
@@ -117,15 +123,46 @@
            [:div.progress-step.incomplete
             [:div]])]])]))
 
-(defn all-lessons []
-  (let [lesson (re-frame/subscribe [::model/current-lesson])]
+(defn- help-mode []
+  (let [help-mode? (re-frame/subscribe [::model/help-mode?])
+        selected-lesson-id (re-frame/subscribe [::model/highlighted-lesson-id])
+        all-lessons (re-frame/subscribe [::model/all-lessons])]
     (fn []
-      [lesson-bubble lesson])))
+      (when @help-mode?
+        [:div
+         (doall (for [{:keys [id description dom-node position attach continue] :as lesson} @all-lessons
+                      :let [dom-node (if attach (dom/sel1 attach) dom-node)
+                            position (if dom-node position :unattached)]
+                      :when (not= :unattached position)
+                      :let [bounds (->bounds dom-node)]]
+                  ^{:key id}
+                  [:div {:id (str (name id) "-container")
+                         :class (str "help-outline " (name position))
+                         :on-mouse-over #(re-frame/dispatch [::model/highlighted-lesson id])
+                         :on-mouse-out #(re-frame/dispatch [::model/highlighted-lesson nil])
+                         :style bounds}
+                   (when (= id @selected-lesson-id)
+                     [lesson-bubble (assoc lesson :continue true)])]))
+         [:div.context-container
+          [:h2 "Help mode"]
+          [:p "Move your mouse over any highlighted element to learn about it"]
+
+          [:div.context-controls
+           [:a {:on-click #(re-frame/dispatch [::model/help-mode false])}
+            "CLOSE " (gstring/unescapeEntities "&#10060")]]]]))))
+
+(defn all-lessons []
+  (let [current-lesson (re-frame/subscribe [::model/current-lesson])]
+    (fn []
+      [:div
+       [help-mode]
+       [lesson-view current-lesson]])))
 
 (defn tutorial [{:keys [context?]}]
   (let [tutorial (re-frame/subscribe [::model/current-tutorial])]
     (fn []
       [:div
-       [lesson-bubble tutorial]
+       [help-mode]
+       [lesson-view (:current-lesson @tutorial)]
        (when context?
          [lesson-context tutorial])])))

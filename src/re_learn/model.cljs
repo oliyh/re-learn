@@ -15,14 +15,17 @@
 
 (def ^:private interceptors
   [(re-frame/path state)
-   re-frame/debug
+;;   re-frame/debug
    re-frame/trim-v
    (re-frame/after validate-schema)])
 
 (re-frame/reg-event-fx ::init
                        (conj interceptors (re-frame/inject-cofx ::local-storage/load :re-learn/lessons-learned))
                        (fn [{:keys [db local-storage]}]
-                         {:db (assoc db :lessons-learned (:re-learn/lessons-learned local-storage {}))}))
+                         {:db (assoc db
+                                     :help-mode? false
+                                     :highlighted-lesson-id nil
+                                     :lessons-learned (:re-learn/lessons-learned local-storage {}))}))
 
 (re-frame/reg-event-fx ::hard-reset
                        interceptors
@@ -33,6 +36,16 @@
 (re-frame/reg-fx ::on-dom-event
                  (fn [[action selector on-event]]
                    (dom/listen-once! (dom/sel1 selector) action on-event)))
+
+(re-frame/reg-event-db ::highlighted-lesson
+                       interceptors
+                       (fn [db [lesson-id]]
+                         (assoc db :highlighted-lesson-id lesson-id)))
+
+(re-frame/reg-event-db ::help-mode
+                       interceptors
+                       (fn [db [enabled?]]
+                         (assoc db :help-mode? enabled?)))
 
 (def ^:private lesson-defaults {:position :right
                                 :version 1})
@@ -138,3 +151,18 @@
                             :to-learn (count to-learn)}
                :current-lesson lesson
                :previous-lesson (last learned)})))))
+
+(re-frame/reg-sub
+ ::all-lessons
+ (fn [db]
+   (-> db state :lessons vals)))
+
+(re-frame/reg-sub
+ ::highlighted-lesson-id
+ (fn [db]
+   (-> db state :highlighted-lesson-id)))
+
+(re-frame/reg-sub
+ ::help-mode?
+ (fn [db]
+   (-> db state :help-mode?)))

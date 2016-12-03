@@ -1,5 +1,5 @@
 .lesson {
-    z-index: 10000;
+    z-index: 10001;
     min-width: 200px;
 }
 
@@ -43,7 +43,7 @@
 
 /* tutorial context */
 
-.tutorial-context-container {
+.context-container {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -81,17 +81,16 @@
     vertical-align: middle;
 }
 
-.tutorial-controls a, .lesson-navigation a {
+.context-controls a, .lesson-navigation a {
     cursor: pointer;
 }
 
-.tutorial-controls {
-    width: 40%;
-    display: inline-block;
-    text-align: center;
+.context-controls {
+    position: absolute;
+    top: 12px;
+    right: 12px;
     line-height: 1em;
     font-size: 1.5em;
-    vertical-align: top;
     text-align: right;
 }
 
@@ -139,4 +138,17 @@
 .progress-step.incomplete > div {
     border: 1px solid lightgreen;
     background-color: rgb(255,64,129);
+}
+
+/* help mode */
+
+.help-outline {
+    position: absolute;
+    box-shadow: 0 0 12px 12px rgba(255, 215, 0, 0.3);
+    outline: 2px solid gold;
+    z-index: 10000;
+}
+
+.help-mode-container {
+
 }
