@@ -2,7 +2,7 @@
 
 **Learn them good**
 
-Data-driven tutorials for reagent components
+Data-driven tutorials for reagent components with no changes required to your dom.
 
 ![](documentation/re-learn.gif?raw=true)
 
@@ -69,9 +69,6 @@ cljs.user>
 ```
 
 ## To do
-- Context in tutorial e.g. title, progress, cancel
-- Can attach lessons to existing dom elements by id or selector
-- Lesson learned criteria can be button or action e.g. clicking on something else
 - Can unlearn individual tutorials rather than unlearning everything
 - Live demo
 
