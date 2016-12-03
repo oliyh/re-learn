@@ -2,9 +2,9 @@
   (:require [goog.style :as gs]
             [goog.string :as gstring]
             [re-frame.core :as re-frame]
+            [re-learn.model :as model]
             [reagent.impl.component :as rc]
-            [dommy.core :as dom]
-            [re-learn.core :as re-learn]))
+            [dommy.core :as dom]))
 
 (defn- ->bounds [dom-node]
   (when-let [bounds (and dom-node (gs/getBounds dom-node))]
@@ -78,9 +78,9 @@
             (when-not continue
               [:button.lesson-learned
                {:style {:float "right"}
-                :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
+                :on-click #(re-frame/dispatch [::model/lesson-learned id])}
                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
-    {:component-will-update #(re-frame/dispatch [::re-learn/prepare-lesson (:id (extract-lesson %))])}))
+    {:component-will-update #(re-frame/dispatch [::model/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn lesson-context [context]
   (when @context
@@ -91,10 +91,10 @@
 
      (when (pos? (get-in @context [:completion :total]))
        [:div.tutorial-navigation
-        [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-unlearned (get-in @context [:previous-lesson :id])])}
+        [:a {:on-click #(re-frame/dispatch [::model/lesson-unlearned (get-in @context [:previous-lesson :id])])}
          (gstring/unescapeEntities "&#10096;")]
         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
-        [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+        [:a {:on-click #(re-frame/dispatch [::model/lesson-learned (get-in @context [:current-lesson :id])])}
          (gstring/unescapeEntities "&#10097;")]])
 
      (when (pos? (get-in @context [:completion :total]))
@@ -114,12 +114,12 @@
             [:div] id])]])]))
 
 (defn all-lessons []
-  (let [lesson (re-frame/subscribe [::re-learn/current-lesson])]
+  (let [lesson (re-frame/subscribe [::model/current-lesson])]
     (fn []
       [lesson-bubble lesson])))
 
 (defn tutorial []
-  (let [tutorial (re-frame/subscribe [::re-learn/current-tutorial])]
+  (let [tutorial (re-frame/subscribe [::model/current-tutorial])]
     (fn []
       [:div
        [lesson-bubble tutorial]
