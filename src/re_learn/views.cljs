@@ -28,12 +28,7 @@
 (defn- bubble-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
-    (cond-> {:position "absolute"
-             :display "inline-block"
-             :padding 8
-             :border-radius 4
-             :color "white"
-             :background-color "rgba(0, 0, 0, 0.8)"}
+    (cond-> {}
       (or (nil? bounds) (= :unattached position))
       (assoc :position "fixed" :left "50%" :top "20%" :transform (str "translate(-50%, -50%)"))
 
@@ -73,7 +68,6 @@
         (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]))
 
 (defn- extract-lesson [component]
-  (def c component)
   (second (rc/get-argv component)))
 
 (def lesson-view

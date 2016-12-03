@@ -1,6 +1,11 @@
 .lesson {
+    position: absolute;
     z-index: 10001;
     min-width: 200px;
+    padding: 8px;
+    border-radius: 4px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .lesson:after {
