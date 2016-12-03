@@ -89,14 +89,13 @@
      [:p (get-in @context [:tutorial :description])]
 
      (when (pos? (get-in @context [:completion :total]))
-       [:div
-        [:div.tutorial-completion
-         [:div.lesson-navigation
-          [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
-           (gstring/unescapeEntities "&#10096;")]
-          [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
-          [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
-           (gstring/unescapeEntities "&#10097;")]]]
+       [:div.tutorial-completion
+        [:div.lesson-navigation
+         [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+          (gstring/unescapeEntities "&#10096;")]
+         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
+         [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+          (gstring/unescapeEntities "&#10097;")]]
 
         [:div.tutorial-progress
          [:div.tutorial-progress-bar {:style {:width (str (* 100 (get-in @context [:completion :ratio])) "%")}}]]
