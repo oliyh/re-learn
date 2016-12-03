@@ -58,6 +58,12 @@
                            {:db (assoc db ::lessons-learned lessons-learned)
                             ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
 
+(re-frame/reg-event-fx ::lesson-unlearned [trim-v]
+                       (fn [{:keys [db]} [lesson-id]]
+                         (let [lessons-learned (dissoc (::lessons-learned db) lesson-id)]
+                           {:db (assoc db ::lessons-learned lessons-learned)
+                            ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
+
 (re-frame/reg-event-db ::register-tutorial [trim-v]
                        (fn [db [{:keys [id lessons] :as tutorial}]]
                          (let [inline-lessons (filter map? lessons)]
@@ -107,11 +113,9 @@
  (fn [db]
    (first (for [tutorial (vals (::tutorials db))
                 :let [lessons (keep (::lessons db) (:lessons tutorial))
-                      to-learn (remove #(already-learned? (::lessons-learned db) %) lessons)]
+                      [learned to-learn] (split-with #(already-learned? (::lessons-learned db) %) lessons)]
                 lesson to-learn
-                :let [total (count lessons)
-                      to-learn to-learn
-                      learned (filter #(already-learned? (::lessons-learned db) %) lessons)]]
+                :let [total (count lessons)]]
             {:tutorial tutorial
              :learned learned
              :to-learn to-learn
@@ -119,7 +123,8 @@
                           :total total
                           :learned (inc (count learned))
                           :to-learn (count to-learn)}
-             :current-lesson lesson}))))
+             :current-lesson lesson
+             :previous-lesson (last learned)}))))
 
 (defn init []
   (re-frame/dispatch-sync [::init]))

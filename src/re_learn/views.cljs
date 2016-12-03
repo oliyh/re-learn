@@ -91,7 +91,7 @@
 
      (when (pos? (get-in @context [:completion :total]))
        [:div.tutorial-navigation
-        [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
+        [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-unlearned (get-in @context [:previous-lesson :id])])}
          (gstring/unescapeEntities "&#10096;")]
         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
         [:a {:on-click #(re-frame/dispatch [::re-learn/lesson-learned (get-in @context [:current-lesson :id])])}
