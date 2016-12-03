@@ -6,6 +6,17 @@ Data-driven tutorials for reagent components with no changes required to your do
 
 ![](documentation/re-learn.gif?raw=true)
 
+## Why?
+
+Well-designed UIs are intuitive but even the best may need to introduce new features or train new users.
+Descriptions should be close to the element they are describing, both on screen and in your code.
+
+Existing tutorial solutions rely on hooks into and mutation of your dom which does not work with React. Defining lessons separately from your code makes them subject to rot as behaviour changes and documentation is not updated.
+
+re-learn allows you to describe lessons for your UI elements with data and generates walk-throughs for your users. It does not mutate your dom, making it React-friendly, and by writing the lesson write next to the code it describes you stand a better chance of keeping it up-to-date.
+
+Versioning allows you to update descriptions when behaviour changes or is enhanced, ensuring that all your users are kept up-to-date with all the awesome features you're adding to your application.
+
 ## Usage
 
 Annotate reagent render functions with lessons
