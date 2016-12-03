@@ -78,7 +78,7 @@
                basket
                totals
                purchase-button
-               help-link]}
+               :help]}
 
     (fn [app-state]
       [:div {:style {:position "absolute"

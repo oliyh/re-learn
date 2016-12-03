@@ -4,7 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[re-frame "0.8.0"]
-                 [prismatic/dommy "1.1.0"]]
+                 [prismatic/dommy "1.1.0"]
+                 [prismatic/schema "1.1.3"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-doo "0.1.6"]
             [lein-figwheel "0.5.4-7"]]

@@ -8,5 +8,5 @@
 (defn stop [] (ra/stop-figwheel!))
 
 (defn cljs
-  ([] (cljs :dev))
+  ([] (cljs "dev"))
   ([build-id] (ra/cljs-repl build-id)))

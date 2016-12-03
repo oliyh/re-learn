@@ -4,8 +4,9 @@
 
 (re-frame/reg-cofx ::load
                    (fn [coeffects k]
-                     (let [value (some-> (.getItem js/localStorage (name k)) edn/read-string)]
-                       (assoc-in coeffects [:local-storage k] value))))
+                     (if-let [value (some-> (.getItem js/localStorage (name k)) edn/read-string)]
+                       (assoc-in coeffects [:local-storage k] value)
+                       coeffects)))
 
 (re-frame/reg-fx ::save
                  (fn [[k v]]
