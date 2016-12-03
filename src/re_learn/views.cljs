@@ -16,66 +16,45 @@
 (defn- container-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
-    (cond-> {:position "absolute"
-             :top top
-             :left left
-             :height 0
-             :width 0}
-      (or (nil? bounds) (= :unattached position))
-      (assoc :width width
-             :height height
-             :top "20%"
-             :left "50%")
+    {:position "absolute"
+     :top top
+     :left left
+     :height 0
+     :width 0}))
 
-      (= :top position)
-      (assoc :top top
-             :height 100
-             :left (+ left (/ width 2)))
-
-      (= :right position)
-      (assoc :height height)
-
-      (= :left position)
-      (assoc :height height)
-
-      (= :bottom position)
-      (assoc :width width))))
-
-(def arrow-offset-top 40)
 (def arrow-width 10)
 
 (defn- bubble-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
 
-    (cond-> {:position "relative"
-             :display "block"
+    (cond-> {:position "absolute"
+             :display "inline-block"
              :padding 8
              :border-radius 4
              :color "white"
-             :background-color "rgba(0, 0, 0, 0.8)"
-             :min-width (- width (* 8 2))}
+             :background-color "rgba(0, 0, 0, 0.8)"}
       (or (nil? bounds) (= :unattached position))
-      (assoc :left 0)
+      (assoc :position "fixed" :left "50%" :top "20%" :transform (str "translate(-50%, -50%)"))
 
       (= :top position)
-      (assoc :top "calc(-100% - 18px)"
-             :height 90
-             :right "-50%")
+      (assoc :top -10
+             :left (/ width 2)
+             :transform (str "translate(-50%, -100%)"))
 
       (= :right position)
-      (assoc :top (- (/ height 2) arrow-offset-top)
+      (assoc :top (/ height 2)
+             :transform "translateY(-50%)"
              :left (+ width arrow-width))
 
       (= :left position)
-      (assoc :top (- (/ height 2) arrow-offset-top)
-             :right (+ arrow-width width))
+      (assoc :top (/ height 2)
+             :left (- arrow-width)
+             :transform "translate(-100%, -50%)")
 
       (= :bottom position)
       (assoc :top (+ height 10)
-             ;;:left (/ width 2)
-             :left (str "calc(-50% + " (/ width 2) ")")
-             ;;:right (/ width 2)
-             ))))
+             :left (/ width 2)
+             :transform (str "translateX(-50%)")))))
 
 (defn- extract-lesson [component]
   (:current-lesson (deref (second (rc/get-argv component)))))
@@ -87,18 +66,20 @@
         (let [{:keys [id description dom-node position attach continue]} (:current-lesson @tutorial)
               dom-node (if attach (dom/sel1 attach) dom-node)
               position (if dom-node position :unattached)]
-          [:div.lesson-container {:style (container-position-style dom-node position)}
-           [:div {:class (str "lesson " (name position))
+          [:div {:id (str (name id) "-container")
+                 :class (str "lesson-container " (name position))
+                 :style (container-position-style dom-node position)}
+           [:div {:id (name id)
+                  :class (str "lesson " (name position))
                   :style (bubble-position-style dom-node position)}
-            [:div {:style {:display "inline-block"}}
-             (if (string? description)
-               [:p description]
-               description)
-             (when-not continue
-               [:button.lesson-learned
-                {:style {:float "right"}
-                 :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
-                (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]]])))
+            (if (string? description)
+              [:p description]
+              description)
+            (when-not continue
+              [:button.lesson-learned
+               {:style {:float "right"}
+                :on-click #(re-frame/dispatch [::re-learn/lesson-learned id])}
+               (rand-nth ["Sweet!" "Cool!" "OK" "Got it"])])]])))
     {:component-will-update #(re-frame/dispatch [::re-learn/prepare-lesson (:id (extract-lesson %))])}))
 
 (defn lesson-context [context]

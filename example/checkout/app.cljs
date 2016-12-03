@@ -8,7 +8,7 @@
   (rlu/with-lesson
     {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
-     :position :bottom}
+     :position :top}
 
     (fn [] [:button.mdl-button.mdl-button--raised
             {:style {:margin-top 10}}
@@ -55,6 +55,17 @@
                  [basket-item item]))
         [totals items]]])))
 
+(def help-link
+  (rlu/with-lesson
+    {:id :help
+     :description "Click here to run the tutorial again"
+     :position :bottom}
+
+    (fn []
+      [:a {:href "#"
+           :on-click re-learn/reset-education!}
+       "Help"])))
+
 (def checkout
   (rlu/with-tutorial
     {:id :checkout-tutorial
@@ -66,16 +77,17 @@
                               "Welcome to the re-learn example"]}
                basket
                totals
-               purchase-button]}
+               purchase-button
+               help-link]}
 
     (fn [app-state]
-      [:div {:style {:width "200px"
-                     :margin "200px auto"}}
+      [:div {:style {:position "absolute"
+                     :left "50%"
+                     :top "20%"
+                     :transform "translate(-50%, -50%)"}}
        [basket app-state]
        [actions]
-       [:p [:a {:href "#"
-                :on-click re-learn/reset-education!}
-            "Help"]]])))
+       [help-link]])))
 
 (defn- on-figwheel-reload []
   (reagent/force-update-all))

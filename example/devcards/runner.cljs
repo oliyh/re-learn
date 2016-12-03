@@ -4,14 +4,15 @@
             [re-learn.views :as views]))
 
 (defcard-rg lesson-bubble
-  (let [style {:style {:display "inline-block"
+  (let [attrs {:style {:display "inline-block"
                        :width "20%"
-                       :margin-right "13%"
+                       :margin-right "calc(5% - 2px)"
                        :border "1px solid black"}}]
-    [:div
-     [:div#lesson-left style "Left"]
-     [:div#lesson-right style "Right"]
-     [:div#lesson-bottom style "Bottom"]
+    [:div {:style {:padding-top 100 :padding-bottom 100}}
+     [:div#lesson-left attrs "Left"]
+     [:div#lesson-right (assoc-in attrs [:style :height] 100) "Right"]
+     [:div#lesson-bottom (assoc-in attrs [:style :height] 200) "Bottom"]
+     [:div#lesson-top (assoc-in attrs [:style :height] 100) "Top"]
 
      [:div#tutorial {:style {:position "fixed" :top 0 :left 0}}
       [views/lesson-bubble (reagent/atom {:current-lesson {:id :abc
@@ -25,32 +26,37 @@
                                                            :position :right}})]
 
       [views/lesson-bubble (reagent/atom {:current-lesson {:id :abc
+                                                           :description "Top"
+                                                           :attach [:#lesson-top]
+                                                           :position :top}})]
+
+      [views/lesson-bubble (reagent/atom {:current-lesson {:id :abc
                                                            :description "Bottom"
                                                            :attach [:#lesson-bottom]
                                                            :position :bottom}})]]]))
 
 (defcard-rg lesson-size
-  (let [style {:style {:display "inline-block"
+  (let [attrs {:style {:display "inline-block"
                        :width "20%"
                        :margin-right "13%"
                        :border "1px solid black"}}]
     [:div
-     [:div#lesson-1 style "1"]
-     [:div#lesson-2 style "2"]
-     [:div#lesson-3 style "3"]
+     [:div#lesson-1 attrs "1"]
+     [:div#lesson-2 (assoc-in attrs [:style :height] 100) "2"]
+     [:div#lesson-3 (assoc-in attrs [:style :height] 200) "3"]
 
      [:div#tutorial {:style {:position "fixed" :top 0 :left 0}}
-      [views/lesson-bubble (reagent/atom {:current-lesson {:id 1
+      [views/lesson-bubble (reagent/atom {:current-lesson {:id "1"
                                                            :description "Short"
                                                            :attach [:#lesson-1]
                                                            :position :left}})]
 
-      [views/lesson-bubble (reagent/atom {:current-lesson {:id 2
+      [views/lesson-bubble (reagent/atom {:current-lesson {:id "2"
                                                            :description "A little bit longer"
                                                            :attach [:#lesson-2]
                                                            :position :left}})]
 
-      [views/lesson-bubble (reagent/atom {:current-lesson {:id 3
+      [views/lesson-bubble (reagent/atom {:current-lesson {:id "3"
                                                            :description [:p "Much, much longer than all the others."
                                                                          [:br]
                                                                          "In fact multiple lines and everything else"

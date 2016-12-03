@@ -1,5 +1,6 @@
 .lesson {
     z-index: 10000;
+    min-width: 200px;
 }
 
 .lesson:after {
@@ -30,12 +31,12 @@
 
 .lesson.right:after {
 	  right: 100%;
-	  top: 40px;
+	  top: 50%;
 	  border-right-color: rgba(0, 0, 0, 0.8);
 }
 
 .lesson.left:after {
 	  left: 100%;
-	  top: 40px;
+	  top: 50%;
 	  border-left-color: rgba(0, 0, 0, 0.8);
 }
