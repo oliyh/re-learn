@@ -118,45 +118,46 @@
             [:div]])]])]))
 
 (defn- help-mode []
-  (let [help-mode? (re-frame/subscribe [::model/help-mode?])
-        selected-lesson-id (re-frame/subscribe [::model/highlighted-lesson-id])
+  (let [selected-lesson-id (re-frame/subscribe [::model/highlighted-lesson-id])
         all-lessons (re-frame/subscribe [::model/all-lessons])]
     (fn []
-      (when @help-mode?
-        [:div
-         (doall (for [{:keys [id description dom-node position attach continue] :as lesson} @all-lessons
-                      :let [dom-node (if attach (dom/sel1 attach) dom-node)
-                            position (if dom-node position :unattached)]
-                      :when (not= :unattached position)
-                      :let [bounds (->bounds dom-node)]]
-                  ^{:key id}
-                  [:div {:id (str (name id) "-container")
-                         :class (str "help-outline " (name position))
-                         :on-mouse-over #(re-frame/dispatch [::model/highlighted-lesson id])
-                         :on-mouse-out #(re-frame/dispatch [::model/highlighted-lesson nil])
-                         :style bounds}
-                   (when (= id @selected-lesson-id)
-                     [lesson-bubble (assoc lesson :continue true)])]))
-         [:div.context-container
-          [:h2 "Help mode"]
-          [:p "Move your mouse over any highlighted element to learn about it"]
+      [:div
+       (doall (for [{:keys [id description dom-node position attach continue] :as lesson} @all-lessons
+                    :let [dom-node (if attach (dom/sel1 attach) dom-node)
+                          position (if dom-node position :unattached)]
+                    :when (not= :unattached position)
+                    :let [bounds (->bounds dom-node)]]
+                ^{:key id}
+                [:div {:id (str (name id) "-container")
+                       :class (str "help-outline " (name position))
+                       :on-mouse-over #(re-frame/dispatch [::model/highlighted-lesson id])
+                       :on-mouse-out #(re-frame/dispatch [::model/highlighted-lesson nil])
+                       :style bounds}
+                 (when (= id @selected-lesson-id)
+                   [lesson-bubble (assoc lesson :continue true)])]))
+       [:div.context-container
+        [:h2 "Help mode"]
+        [:p "Move your mouse over any highlighted element to learn about it"]
 
-          [:div.context-controls
-           [:a {:on-click #(re-frame/dispatch [::model/help-mode false])}
-            "CLOSE " (gstring/unescapeEntities "&#10060")]]]]))))
+        [:div.context-controls
+         [:a {:on-click #(re-frame/dispatch [::model/help-mode false])}
+          "CLOSE " (gstring/unescapeEntities "&#10060")]]]])))
 
 (defn all-lessons []
-  (let [current-lesson (re-frame/subscribe [::model/current-lesson])]
+  (let [current-lesson (re-frame/subscribe [::model/current-lesson])
+        help-mode? (re-frame/subscribe [::model/help-mode?])]
     (fn []
-      [:div
-       [help-mode]
-       [lesson-view current-lesson]])))
+      (if @help-mode?
+        [help-mode]
+        [lesson-view current-lesson]))))
 
 (defn tutorial [{:keys [context?]}]
-  (let [tutorial (re-frame/subscribe [::model/current-tutorial])]
+  (let [tutorial (re-frame/subscribe [::model/current-tutorial])
+        help-mode? (re-frame/subscribe [::model/help-mode?])]
     (fn []
-      [:div
-       [help-mode]
-       [lesson-view (:current-lesson @tutorial)]
-       (when context?
-         [lesson-context tutorial])])))
+      (if @help-mode?
+        [help-mode]
+        [:div
+         [lesson-view (:current-lesson @tutorial)]
+         (when context?
+           [lesson-context tutorial])]))))
