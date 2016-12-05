@@ -7,16 +7,11 @@
             [dommy.core :as dom]
             [reagent.core :as r]))
 
-(defn- ->bounds [dom-node]
-  (when-let [bounds (and dom-node (gs/getBounds dom-node))]
-    {:top (.-top bounds)
-     :left (.-left bounds)
-     :width (.-width bounds)
-     :height (.-height bounds)}))
+(defn ->bounds [dom-node]
+  (some-> dom-node dom/bounding-client-rect))
 
 (defn- container-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
-
     {:position "absolute"
      :top top
      :left left
