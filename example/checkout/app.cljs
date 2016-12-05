@@ -25,14 +25,23 @@
 
     (fn [items]
       [:tr
+       [:td]
        [:td {:col-span 2} "Total"]
        [:td (reduce + (map :sub-total-price @items))]])))
 
 (defn- basket-item [{:keys [name quantity unit-price sub-total-price]}]
-  [:tr.basket-item
-   [:td name]
-   [:td quantity " @ " unit-price]
-   [:td sub-total-price]])
+  (let [selected? (reagent/atom false)]
+    (fn []
+      [:tr.basket-item {:on-click #(swap! selected? not)}
+       [:td [:label {:class (str "mdl-checkbox mdl-data-table__select is-upgraded" (when @selected? " is-checked"))}
+             [:input.mdl-checkbox__input {:type "checkbox"
+                                          :on-click #(swap! selected? not)}]
+             [:span.mdl-checkbox__focus-helper]
+             [:span.mdl-checkbox__box-outline
+              [:span.mdl-checkbox__tick-outline]]]]
+       [:td name]
+       [:td quantity " @ " unit-price]
+       [:td sub-total-price]])))
 
 (def basket
   (rlu/with-lesson
@@ -46,6 +55,7 @@
       [:table#basket.mdl-data-table
        [:thead
         [:tr
+         [:th]
          [:th "Name"]
          [:th "Quantity"]
          [:th "Sub-total"]]]

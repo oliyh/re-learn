@@ -94,7 +94,7 @@
         [:a {:on-click #(re-frame/dispatch [::model/lesson-unlearned (get-in @context [:previous-lesson :id])])}
          (gstring/unescapeEntities "&#10096;")]
         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
-        [:a {:on-click #(re-frame/dispatch [::model/lesson-learned (get-in @context [:current-lesson :id])])}
+        [:a {:on-click #(re-frame/dispatch [::model/trigger-lesson-learned (get-in @context [:current-lesson :id])])}
          (gstring/unescapeEntities "&#10097;")]])
 
      [:div.context-controls

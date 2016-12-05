@@ -15,7 +15,7 @@
 
 (def ^:private interceptors
   [(re-frame/path state)
-;;   re-frame/debug
+   ;;re-frame/debug
    re-frame/trim-v
    (re-frame/after validate-schema)])
 
@@ -36,6 +36,11 @@
 (re-frame/reg-fx ::on-dom-event
                  (fn [[action selector on-event]]
                    (dom/listen-once! (dom/sel1 selector) action on-event)))
+
+(re-frame/reg-fx ::trigger-dom-event
+                 (fn [[action selector]]
+                   (.dispatchEvent (dom/sel1 selector)
+                                   (js/MouseEvent. (name action) #js {:bubbles true}))))
 
 (re-frame/reg-event-db ::highlighted-lesson
                        interceptors
@@ -76,6 +81,16 @@
                                                        lesson-ids)]
                            {:db (assoc db :lessons-learned lessons-learned)
                             ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
+
+(re-frame/reg-event-fx ::trigger-lesson-learned
+                       interceptors
+                       (fn [{:keys [db]} [lesson-id]]
+                         (let [{:keys [continue]} (get-in db [:lessons lesson-id])]
+                           (if continue
+                             {::trigger-dom-event [:click continue]
+                              :db db}
+                             {:dispatch [::lesson-learned lesson-id]
+                              :db db}))))
 
 (re-frame/reg-event-fx ::lesson-unlearned
                        interceptors
