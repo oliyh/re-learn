@@ -43,9 +43,28 @@
              :transform "translate(-100%, -50%)")
 
       (= :bottom position)
-      (assoc :top (+ height 10)
+      (assoc :top (+ height arrow-width)
              :left (/ width 2)
-             :transform (str "translateX(-50%)")))))
+             :transform (str "translateX(-50%)"))
+
+      (= :bottom-left position)
+      (assoc :top (+ height (/ arrow-width 2))
+             :left (- (/ arrow-width 2))
+             :transform (str "translateX(-100%)"))
+
+      (= :bottom-right position)
+      (assoc :top (+ height (/ arrow-width 2))
+             :left (+ width (/ arrow-width 2)))
+
+      (= :top-left position)
+      (assoc :top (- arrow-width)
+             :left (- (/ arrow-width 2))
+             :transform (str "translate(-100%, -100%)"))
+
+      (= :top-right position)
+      (assoc :top (- arrow-width)
+             :left (+ width (/ arrow-width 2))
+             :transform (str "translateY(-100%)")))))
 
 (defn- lesson-bubble [{:keys [id description dom-node position attach continue] :as lesson}]
   (let [dom-node (if attach (dom/sel1 attach) dom-node)

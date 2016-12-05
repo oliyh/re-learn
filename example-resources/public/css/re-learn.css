@@ -46,6 +46,50 @@
 	  border-left-color: rgba(0, 0, 0, 0.8);
 }
 
+.lesson.bottom-left {
+    border-top-right-radius: 0;
+}
+
+.lesson.bottom-left:after {
+	  left: 100%;
+	  top: 10px;
+	  border-left-color: rgba(0, 0, 0, 0.8);
+    border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+.lesson.bottom-right {
+    border-top-left-radius: 0;
+}
+
+.lesson.bottom-right:after {
+	  right: 100%;
+	  top: 10px;
+	  border-right-color: rgba(0, 0, 0, 0.8);
+    border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+.lesson.top-left {
+    border-bottom-right-radius: 0;
+}
+
+.lesson.top-left:after {
+	  left: 100%;
+	  bottom: 0px;
+	  border-left-color: rgba(0, 0, 0, 0.8);
+    border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
+.lesson.top-right {
+    border-bottom-left-radius: 0;
+}
+
+.lesson.top-right:after {
+	  right: 100%;
+	  bottom: 0px;
+	  border-right-color: rgba(0, 0, 0, 0.8);
+    border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
 /* tutorial context */
 
 .context-container {

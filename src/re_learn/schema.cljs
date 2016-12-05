@@ -9,7 +9,7 @@
 (def Lesson {:id                        LessonId
              :description               Html
              :version                   s/Int
-             :position                  (s/enum :left :right :top :bottom :unattached)
+             :position                  (s/enum :left :right :top :bottom :unattached :top-left :top-right :bottom-left :bottom-right)
              (s/optional-key :dom-node) s/Any
              (s/optional-key :attach)   DommySelector
              (s/optional-key :continue) DommySelector})
