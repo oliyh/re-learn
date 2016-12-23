@@ -10,27 +10,58 @@
             [todomvc.components.todos-list :as todos-list]
             [todomvc.components.todos-count :as todos-count]
             [todomvc.components.todos-filters :as todos-filters]
-            [todomvc.components.todos-clear :as todos-clear]))
+            [todomvc.components.todos-clear :as todos-clear]
+            [re-learn.core :as re-learn]
+            [re-learn.utils :as rlu]
+            [re-learn.views :as re-learn-views]))
 
-(defn todo-app []
-  [:div
-   [:section#todoapp
-    [:header#header
-     [title/component]
-     [todo-input/component]]
-    [:div {:style 
-           {:display (helpers/display-elem (helpers/todos-any?
-                                            @session/todos))}}
-     [:section#main
-      [todos-toggle/component]
-      [todos-list/component (helpers/todos-all @session/todos)]]
-     [:footer#footer
-      [todos-count/component]
-      [todos-filters/component]
-      [todos-clear/component]
-      ]]]
-   [footer/component]])
+(def re-learn-controls
+  (rlu/with-lesson
+    {:id :re-learn-controls-lesson
+     :description "Use these controls to run the tutorial again or activate help mode"
+     :position :left}
+    (fn []
+      [:div
+       [:p [:button {:on-click re-learn/reset-education!} "Reset"]]
+       [:p [:button {:on-click re-learn/enable-help-mode!} "Help mode"]]])))
+
+(def todo-app
+  (rlu/with-tutorial
+    {:id :checkout-tutorial
+     :name "The todo list"
+     :description "Create and manage your todos"
+     :lessons [{:id :welcome
+                :description [:div
+                              [:h2 "Welcome"]
+                              "Welcome to the re-learn example"]}
+               re-learn-controls
+               todo-input/component]}
+    (fn []
+      [:div
+       [:section#todoapp
+        [:header#header
+         [title/component]
+         [todo-input/component]]
+        [:div {:style
+               {:display (helpers/display-elem (helpers/todos-any?
+                                                @session/todos))}}
+         [:section#main
+          [todos-toggle/component]
+          [todos-list/component (helpers/todos-all @session/todos)]]
+         [:footer#footer
+          [todos-count/component]
+          [todos-filters/component]
+          [todos-clear/component]]]]
+       [footer/component]
+       [re-learn-controls]])))
+
+(defn- mount-all []
+  (reagent/render [todo-app] (js/document.getElementById "app"))
+  (reagent/render [re-learn-views/tutorial {:context? true}] (js/document.getElementById "tutorial")))
+
+(defn- on-figwheel-reload []
+  (mount-all))
 
 (defn ^:export run []
-  (reagent/render [todo-app]
-                  (js/document.getElementById "app")))
+  (re-learn/init)
+  (mount-all))

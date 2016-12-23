@@ -134,7 +134,7 @@
     (reagent/render [re-learn-views/tutorial {:context? true}] tutorial-root)))
 
 (defn- on-figwheel-reload []
-  (reagent/force-update-all))
+  (mount-all))
 
 (defn- init []
   (re-learn/init)

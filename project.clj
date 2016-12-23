@@ -18,6 +18,7 @@
                                   [com.cemerick/piggieback "0.2.1"]
                                   [figwheel-sidecar "0.5.2"]
                                   [devcards "0.2.2"]
+                                  [binaryage/devtools "0.8.3"]
 
                                   ;; todomvc
                                   [secretary "1.2.2"]
@@ -32,7 +33,8 @@
                         :compiler {:main "checkout.app"
                                    :asset-path "js/out"
                                    :output-to "dev-resources/public/checkout/js/app.js"
-                                   :output-dir "dev-resources/public/checkout/js/out"}}
+                                   :output-dir "dev-resources/public/checkout/js/out"
+                                   :preloads [devtools.preload]}}
 
                        {:id "todomvc"
                         :source-paths ["src/" "example/todomvc"]
@@ -40,7 +42,8 @@
                         :compiler {:main "todomvc.core"
                                    :asset-path "js/out"
                                    :output-to "dev-resources/public/todomvc/js/app.js"
-                                   :output-dir "dev-resources/public/todomvc/js/out"}}
+                                   :output-dir "dev-resources/public/todomvc/js/out"
+                                   :preloads [devtools.preload]}}
 
                        {:id "devcards"
                         :figwheel {:devcards true}

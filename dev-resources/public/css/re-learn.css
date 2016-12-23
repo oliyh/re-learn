@@ -8,6 +8,15 @@
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+.lesson button {
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+    padding: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
 .lesson:after {
     border: solid transparent;
 	  content: " ";
