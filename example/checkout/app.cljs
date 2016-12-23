@@ -113,26 +113,31 @@
         [:li [re-learn-link]]
         [:li [help-link]]]])))
 
+(def app-db
+  (reagent/atom [{:id "apples"
+                  :name "Apples"
+                  :quantity 2
+                  :unit-price 0.3
+                  :sub-total-price 0.6}
+
+                 {:id "oranges"
+                  :name "Oranges"
+                  :quantity 5
+                  :unit-price 0.25
+                  :sub-total-price 1.25}]))
+
+(defn- mount-all []
+  (let [tutorial-root (js/document.getElementById "tutorial")
+        app-root (js/document.getElementById "app")]
+
+    (reagent/render [checkout app-db] app-root)
+    (reagent/render [re-learn-views/tutorial {:context? true}] tutorial-root)))
+
 (defn- on-figwheel-reload []
   (reagent/force-update-all))
 
 (defn- init []
-  (let [app-root (js/document.getElementById "app")
-        tutorial-root (js/document.getElementById "tutorial")
-        app-state (reagent/atom [{:id "apples"
-                                  :name "Apples"
-                                  :quantity 2
-                                  :unit-price 0.3
-                                  :sub-total-price 0.6}
-
-                                 {:id "oranges"
-                                  :name "Oranges"
-                                  :quantity 5
-                                  :unit-price 0.25
-                                  :sub-total-price 1.25}])]
-    (re-learn/init)
-
-    (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn-views/tutorial {:context? true}] tutorial-root)))
+  (re-learn/init)
+  (mount-all))
 
 (.addEventListener js/document "DOMContentLoaded" init)

@@ -11,4 +11,4 @@ pom.xml.asc
 .hg/
 /figwheel_server.log
 /resources/public/js
-/example-resources/public/js
+/dev-resources/public/*/js

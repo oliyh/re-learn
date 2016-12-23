@@ -3,10 +3,10 @@
 
 (defn start []
   (ra/start-figwheel!)
-  (ra/start-autobuild :dev :devcards))
+  (ra/start-autobuild :checkout :todomvc :devcards))
 
 (defn stop [] (ra/stop-figwheel!))
 
 (defn cljs
-  ([] (cljs "dev"))
+  ([] (cljs "todomvc"))
   ([build-id] (ra/cljs-repl build-id)))

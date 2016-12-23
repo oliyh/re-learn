@@ -67,14 +67,14 @@ Let re-learn take care of everything else!
     (reagent/render [re-learn/tutorial-view] tutorial-root)))
 ```
 
-[Look at the working example](example/checkout/app.cljs) for more details.
+[Look at the working examples](example) for more details.
 
 ## Development
 
 ```clojure
 user> (dev)
 dev> (start)
-;; visit http://localhost:3449
+;; visit http://localhost:3449/todomvc/index.html
 dev> (cljs)
 cljs.user>
 ```

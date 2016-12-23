@@ -1,4 +1,4 @@
-(ns devcards.context
+(ns re-learn.devcards.context
   (:require [devcards.core :as dc :refer-macros [defcard-rg]]
             [reagent.core :as reagent]
             [re-learn.views :as views]))
