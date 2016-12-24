@@ -15,7 +15,7 @@
 
 (def ^:private interceptors
   [(re-frame/path state)
-   re-frame/debug
+   ;;re-frame/debug
    re-frame/trim-v
    (re-frame/after validate-schema)])
 
