@@ -165,7 +165,11 @@
         [help-mode]
         [lesson-view current-lesson]))))
 
-(defn tutorial [{:keys [context?]}]
+(defn tutorial
+  "Root view for displaying unlearned tutorials on the page.
+   The :context? key allows you to turn on the context view which shows progress through the tutorial
+   at the bottom of the screen."
+  [{:keys [context?]}]
   (let [tutorial (re-frame/subscribe [::model/current-tutorial])
         help-mode? (re-frame/subscribe [::model/help-mode?])]
     (fn []

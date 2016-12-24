@@ -19,10 +19,11 @@ Versioning allows you to update descriptions when behaviour changes or is enhanc
 
 ## Usage
 
-Annotate reagent render functions with lessons
+Annotate reagent components with lessons describing the component and how to use it:
 
 ```clojure
-(require [re-learn.core :as re-learn])
+(require [re-learn.core :as re-learn]
+         [re-learn.views :as re-learn-views])
 
 (def purchase-button
   (re-learn/with-lesson
@@ -37,7 +38,7 @@ Annotate reagent render functions with lessons
     (fn [] [:button.mdl-button.mdl-button--raised "Purchase"])))
 ```
 
-Combine lessons into tutorials and attach them to views
+Combine lessons into tutorials and attach them to views:
 
 ```clojure
 (def checkout
@@ -46,7 +47,7 @@ Combine lessons into tutorials and attach them to views
      :name        "The checkout"
      :description "Review your basket, check the price and confirm your purchase"
      :precedence  1 ;; optional, allows some tutorials to take precedence over others
-     :lessons [{:id :welcome-lesson                              ;; this is an inline lesson, not attached to anything
+     :lessons [{:id          :welcome-lesson ;; this is an inline lesson, not attached to anything
                 :description "Welcome to the re-learn example"}
                basket
                totals
@@ -66,10 +67,16 @@ Let re-learn take care of everything else!
         tutorial-root (js/document.getElementById "tutorial")
         app-state (fn [] ...)
     (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn/tutorial-view] tutorial-root)))
+    (reagent/render [re-learn-views/tutorial-view {:context? true}] tutorial-root)))
 ```
 
 [Look at the working examples](example) for more details.
+
+## Style
+
+re-learn has simple and structured markup making it easy for you to apply your own styles.
+To get started it's easiest to copy the [reference version](dev-resources/public/css/re-learn.css) into your own project and adapt it as you wish.
+
 
 ## Development
 
