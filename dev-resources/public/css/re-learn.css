@@ -141,6 +141,12 @@
 
 .context-controls a, .lesson-navigation a {
     cursor: pointer;
+    color: hotpink;
+}
+
+.lesson-navigation a.disabled {
+    color: gray;
+    pointer-events: none;
 }
 
 .context-controls {

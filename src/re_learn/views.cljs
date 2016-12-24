@@ -108,8 +108,10 @@
         [:a {:on-click #(re-frame/dispatch [::model/lesson-unlearned (get-in @context [:previous-lesson :id])])}
          (gstring/unescapeEntities "&#10096;")]
         [:span (str (get-in @context [:completion :learned]) "/"  (get-in @context [:completion :total]))]
-        [:a {:on-click #(re-frame/dispatch [::model/trigger-lesson-learned (get-in @context [:current-lesson :id])])}
-         (gstring/unescapeEntities "&#10097;")]])
+        (let [lesson (get-in @context [:current-lesson])]
+          [:a {:class (when (:continue lesson) "disabled")
+               :on-click #(re-frame/dispatch [::model/lesson-learned (:id lesson)])}
+           (gstring/unescapeEntities "&#10097;")])])
 
      [:div.context-controls
       [:a {:on-click #(re-frame/dispatch (into [::model/lesson-learned] (map :id (:to-learn @context))))}

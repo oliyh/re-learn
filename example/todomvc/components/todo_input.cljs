@@ -13,8 +13,10 @@
 (def component
   (re-learn/with-lesson
     {:id :todo-input-lesson
-     :description "Add new todo items by typing here, pressing Enter to save"
-     :position :bottom}
+     :description "Add new todo items by typing here, pressing Enter to save. Try it out now!"
+     :position :bottom
+     :continue {:event :keydown
+                :event-filter (fn [e] (= helpers/enter-key (.-which e)))}}
     (with-meta
       (fn []
         (let [default ""

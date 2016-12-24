@@ -13,7 +13,9 @@
              :position                  (s/enum :left :right :top :bottom :unattached :top-left :top-right :bottom-left :bottom-right)
              (s/optional-key :dom-node) s/Any
              (s/optional-key :attach)   DommySelector
-             (s/optional-key :continue) DommySelector})
+             (s/optional-key :continue) {:event                         s/Keyword
+                                         (s/optional-key :selector)     DommySelector
+                                         (s/optional-key :event-filter) (s/pred fn?)}})
 
 (def Tutorial
   {:id          TutorialId

@@ -33,10 +33,11 @@
      :lessons [{:id :welcome
                 :description [:div
                               [:h2 "Welcome"]
-                              "Welcome to the re-learn example"]}
-               re-learn-controls
+                              "Welcome to your todo list. Let's explore what you can do!"]}
                todo-input/component
-               todos-list/component]}
+               todos-list/component
+               todos-filters/component
+               re-learn-controls]}
     (fn []
       [:div
        [:section#todoapp

@@ -15,7 +15,7 @@
 
 (def ^:private interceptors
   [(re-frame/path state)
-   ;;re-frame/debug
+   re-frame/debug
    re-frame/trim-v
    (re-frame/after validate-schema)])
 
@@ -34,13 +34,18 @@
                           ::local-storage/save [:re-learn/lessons-learned {}]}))
 
 (re-frame/reg-fx ::on-dom-event
-                 (fn [[action selector on-event]]
-                   (dom/listen-once! (dom/sel1 selector) action on-event)))
+                 (fn [[action dom-node on-event]]
+                   (dom/listen! dom-node action on-event)))
 
-(re-frame/reg-fx ::trigger-dom-event
-                 (fn [[action selector]]
-                   (.dispatchEvent (dom/sel1 selector)
-                                   (js/MouseEvent. (name action) #js {:bubbles true}))))
+(re-frame/reg-fx ::unlisten-dom-event
+                 (fn [[action dom-node on-event]]
+                   (dom/unlisten! dom-node action on-event)))
+
+(re-frame/reg-event-fx ::deregister-dom-event
+                       interceptors
+                       (fn [{:keys [db]} [event dom-node on-event]]
+                         {:db db
+                          ::unlisten-dom-event [event dom-node on-event]}))
 
 (re-frame/reg-event-db ::highlighted-lesson
                        interceptors
@@ -84,16 +89,6 @@
                            {:db (assoc db :lessons-learned lessons-learned)
                             ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
 
-(re-frame/reg-event-fx ::trigger-lesson-learned
-                       interceptors
-                       (fn [{:keys [db]} [lesson-id]]
-                         (let [{:keys [continue]} (get-in db [:lessons lesson-id])]
-                           (if continue
-                             {::trigger-dom-event [:click continue]
-                              :db db}
-                             {:dispatch [::lesson-learned lesson-id]
-                              :db db}))))
-
 (re-frame/reg-event-fx ::lesson-unlearned
                        interceptors
                        (fn [{:keys [db]} [lesson-id]]
@@ -130,10 +125,19 @@
 (re-frame/reg-event-fx ::prepare-lesson
                        interceptors
                        (fn [{:keys [db]} [lesson-id]]
-                         (if-let [continue (get-in db [:lessons lesson-id :continue])]
-                           {:db db
-                            ::on-dom-event [:click continue #(re-frame/dispatch [::lesson-learned lesson-id])]}
-                           {:db db})))
+                         (let [lesson (get-in db [:lessons lesson-id])]
+                           (if (:continue lesson)
+                             (let [{:keys [event selector event-filter]
+                                    :or {event-filter identity}} (:continue lesson)
+                                   dom-node (when selector (dom/sel1 selector) (:dom-node lesson))]
+                               {:db db
+                                ::on-dom-event [event
+                                                dom-node
+                                                (fn listener [e]
+                                                  (when (event-filter e)
+                                                    (re-frame/dispatch [::lesson-learned lesson-id])
+                                                    (re-frame/dispatch [::deregister-dom-event event dom-node listener])))]})
+                             {:db db}))))
 
 (defn- already-learned?
   ([lessons-learned]

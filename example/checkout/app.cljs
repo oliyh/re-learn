@@ -44,12 +44,12 @@
 
 (def basket
   (re-learn/with-lesson
-    {:id :basket-lesson
+    {:id          :basket-lesson
      :description "This is your basket where all the items you want to purchase appear. Click on an item to continue."
-     :position :left
-     :attach [:#basket :.basket-item]
-     :continue [:#basket :.basket-item]}
-
+     :position    :left
+     :attach      [:#basket :.basket-item]
+     :continue    {:event :click
+                   :selector [:#basket :.basket-item]}}
     (fn [items]
       [:table#basket.mdl-data-table
        [:thead

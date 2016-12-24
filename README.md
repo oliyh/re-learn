@@ -32,11 +32,12 @@ Annotate reagent components with lessons describing the component and how to use
   (re-learn/with-lesson
     {:id          :purchase-button-lesson
      :description "When you're ready, click here to purchase"
-     :position    :bottom           ;; optional, defaults to :right. values are :left, :right, :bottom, :unattached and :top (experimental)
-     :version     2                 ;; optional, defaults to 1
-     :attach      [:button#some-id] ;; optional, attach lesson to a dommy selector, see https://github.com/plumatic/dommy for use
-     :continue    [:table :.tr]     ;; optional, continue when this dommy selector is clicked
-     }
+     :position    :bottom                  ;; optional, defaults to :right. values are :left, :right, :bottom, :top, :unattached, :bottom-left etc
+     :version     2                        ;; optional, defaults to 1
+     :attach      [:button#some-id]        ;; optional, position lesson relative to a dommy selector, see https://github.com/plumatic/dommy for use
+     :continue    {:event :click           ;; optional, continue when this event occurs
+                   :selector [:table :.tr]
+                   :event-filter (fn [e] ...)}}
 
     (fn [] [:button.mdl-button.mdl-button--raised "Purchase"])))
 ```
