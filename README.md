@@ -19,6 +19,9 @@ Versioning allows you to update descriptions when behaviour changes or is enhanc
 
 ## Usage
 
+Add re-learn to your project's dependencies:
+[![Clojars Project](https://img.shields.io/clojars/v/re-learn.svg)](https://clojars.org/re-learn)
+
 Annotate reagent components with lessons describing the component and how to use it:
 
 ```clojure
