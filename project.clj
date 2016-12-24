@@ -27,7 +27,7 @@
                                   [alandipert/storage-atom "1.2.4"]]
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
-  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "nashorn" "test" "once"]]}
+  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]}
   :figwheel {:css-dirs ["dev-resources/public/css"]}
   :cljsbuild {:builds [{:id "checkout"
                         :source-paths ["src/" "example/checkout"]
@@ -64,4 +64,4 @@
                         :compiler {:output-to "out/unit-test.js"
                                    :main "re-learn.runner"
                                    :optimizations :whitespace
-                                   :parallel-build false}}]})
+                                   :parallel-build true}}]})
