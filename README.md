@@ -22,11 +22,10 @@ Versioning allows you to update descriptions when behaviour changes or is enhanc
 Annotate reagent render functions with lessons
 
 ```clojure
-(require [re-learn.core :as re-learn]
-         [re-learn.utils :as rlu])
+(require [re-learn.core :as re-learn])
 
 (def purchase-button
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
      :position :bottom         ;; optional, defaults to :right. values are :left, :right, :bottom, :unattached and :top (experimental)
@@ -42,7 +41,7 @@ Combine lessons into tutorials and attach them to views
 
 ```clojure
 (def checkout
-  (rlu/with-tutorial
+  (re-learn/with-tutorial
     {:id :checkout-tutorial
      :lessons [{:id :welcome-lesson                              ;; this is an inline lesson, not attached to anything
                 :description "Welcome to the re-learn example"}

@@ -19,6 +19,8 @@
                                   [figwheel-sidecar "0.5.2"]
                                   [devcards "0.2.2"]
                                   [binaryage/devtools "0.8.3"]
+                                  [day8.re-frame/test "0.1.3"]
+                                  [lein-doo "0.1.6"]
 
                                   ;; todomvc
                                   [secretary "1.2.2"]
@@ -34,7 +36,8 @@
                                    :asset-path "js/out"
                                    :output-to "dev-resources/public/checkout/js/app.js"
                                    :output-dir "dev-resources/public/checkout/js/out"
-                                   :preloads [devtools.preload]}}
+                                   :preloads [devtools.preload]
+                                   :parallel-build true}}
 
                        {:id "todomvc"
                         :source-paths ["src/" "example/todomvc"]
@@ -43,19 +46,22 @@
                                    :asset-path "js/out"
                                    :output-to "dev-resources/public/todomvc/js/app.js"
                                    :output-dir "dev-resources/public/todomvc/js/out"
-                                   :preloads [devtools.preload]}}
+                                   :preloads [devtools.preload]
+                                   :parallel-build true}}
 
                        {:id "devcards"
                         :figwheel {:devcards true}
                         :source-paths ["src" "test"]
-                        :compiler {:main "re-learn.runner"
+                        :compiler {:main "re-learn.all-tests"
                                    :asset-path "js/devcards"
                                    :output-to "dev-resources/public/devcards/js/devcards.js"
                                    :output-dir "dev-resources/public/devcards/js/devcards"
-                                   :source-map-timestamp true}}
+                                   :source-map-timestamp true
+                                   :parallel-build true}}
 
                        {:id "test"
                         :source-paths ["src" "test"]
-                        :compiler {:output-to "target/unit-test.js"
-                                   :main 're-learn.runner
-                                   :optimizations :whitespace}}]})
+                        :compiler {:output-to "out/unit-test.js"
+                                   :main "re-learn.runner"
+                                   :optimizations :whitespace
+                                   :parallel-build false}}]})

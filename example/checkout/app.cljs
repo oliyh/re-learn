@@ -1,11 +1,10 @@
 (ns checkout.app
   (:require [re-learn.core :as re-learn]
-            [re-learn.utils :as rlu]
             [re-learn.views :as re-learn-views]
             [reagent.core :as reagent]))
 
 (def purchase-button
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :purchase-button-lesson
      :description "When you're ready, click here to purchase"
      :position :top}
@@ -18,7 +17,7 @@
   [:div [purchase-button]])
 
 (def totals
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :totals-lesson
      :description "The total amount of your basket appears here"
      :position :right}
@@ -44,7 +43,7 @@
        [:td sub-total-price]])))
 
 (def basket
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :basket-lesson
      :description "This is your basket where all the items you want to purchase appear. Click on an item to continue."
      :position :left
@@ -66,7 +65,7 @@
         [totals items]]])))
 
 (def re-learn-link
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :re-learn
      :description "Click here to run the tutorial again"
      :position :left}
@@ -77,7 +76,7 @@
        "Re-learn"])))
 
 (def help-link
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :help
      :description "Click here to enter help mode and discover what everything does"
      :position :bottom}
@@ -88,7 +87,7 @@
        "Help"])))
 
 (def checkout
-  (rlu/with-tutorial
+  (re-learn/with-tutorial
     {:id :checkout-tutorial
      :name "The checkout"
      :description "Review your basket, check the price and confirm your purchase"

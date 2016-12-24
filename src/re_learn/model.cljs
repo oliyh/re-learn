@@ -15,7 +15,7 @@
 
 (def ^:private interceptors
   [(re-frame/path state)
-   ;;re-frame/debug
+   re-frame/debug
    re-frame/trim-v
    (re-frame/after validate-schema)])
 
@@ -54,6 +54,8 @@
 
 (def ^:private lesson-defaults {:position :right
                                 :version 1})
+
+(def ^:private tutorial-defaults {:precedence 1})
 
 (defn- add-lesson [lessons {:keys [id] :as lesson}]
   (assoc lessons id (merge lesson-defaults lesson)))
@@ -116,7 +118,9 @@
                          (let [inline-lessons (filter map? lessons)]
                            (-> db
                                (update :lessons add-lessons inline-lessons)
-                               (update :tutorials assoc id (update tutorial :lessons #(map ->lesson-id %)))))))
+                               (update :tutorials assoc id
+                                       (-> (merge tutorial-defaults tutorial)
+                                           (update :lessons #(map ->lesson-id %))))))))
 
 (re-frame/reg-event-db ::deregister-tutorial
                        interceptors
@@ -152,7 +156,7 @@
  ::current-tutorial
  (fn [db]
    (let [state (state db)]
-     (first (for [tutorial (vals (:tutorials state))
+     (first (for [tutorial (->> (:tutorials state) vals (sort-by :precedence))
                   :let [lessons (keep (:lessons state) (:lessons tutorial))
                         [learned to-learn] (split-with #(already-learned? (:lessons-learned state) %) lessons)]
                   lesson to-learn

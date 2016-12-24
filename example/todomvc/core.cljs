@@ -1,5 +1,6 @@
 (ns todomvc.core
   (:require [reagent.core :as reagent]
+            [todomvc.routes]
             [todomvc.session :as session]
             [todomvc.actions :as actions]
             [todomvc.helpers :as helpers]
@@ -12,11 +13,10 @@
             [todomvc.components.todos-filters :as todos-filters]
             [todomvc.components.todos-clear :as todos-clear]
             [re-learn.core :as re-learn]
-            [re-learn.utils :as rlu]
             [re-learn.views :as re-learn-views]))
 
 (def re-learn-controls
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :re-learn-controls-lesson
      :description "Use these controls to run the tutorial again or activate help mode"
      :position :left}
@@ -26,8 +26,8 @@
        [:p [:button {:on-click re-learn/enable-help-mode!} "Help mode"]]])))
 
 (def todo-app
-  (rlu/with-tutorial
-    {:id :checkout-tutorial
+  (re-learn/with-tutorial
+    {:id :todomvc-tutorial
      :name "The todo list"
      :description "Create and manage your todos"
      :lessons [{:id :welcome
@@ -35,7 +35,8 @@
                               [:h2 "Welcome"]
                               "Welcome to the re-learn example"]}
                re-learn-controls
-               todo-input/component]}
+               todo-input/component
+               todos-list/component]}
     (fn []
       [:div
        [:section#todoapp

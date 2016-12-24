@@ -2,7 +2,7 @@
   (:require [reagent.core :as reagent]
             [todomvc.actions :as actions]
             [todomvc.helpers :as helpers]
-            [re-learn.utils :as rlu]))
+            [re-learn.core :as re-learn]))
 
 (defn on-key-down [k title default]
   (let [key-pressed (.-which k)]
@@ -11,7 +11,7 @@
       nil)))
 
 (def component
-  (rlu/with-lesson
+  (re-learn/with-lesson
     {:id :todo-input-lesson
      :description "Add new todo items by typing here, pressing Enter to save"
      :position :bottom}
