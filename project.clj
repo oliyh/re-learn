@@ -33,7 +33,8 @@
   :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]
             "build-pages" ["do"
                            ["run" "-m" "pages/build"]
-                           ["cljsbuild" "once" "pages"]]}
+                           ["cljsbuild" "once" "pages"]]
+            "deploy-pages" ["run" "-m" "pages/push"]}
   :figwheel {:css-dirs ["dev-resources/public/css"]}
   :cljsbuild {:builds [{:id "checkout"
                         :source-paths ["src/" "example/checkout"]
