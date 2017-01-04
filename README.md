@@ -3,6 +3,7 @@
 **Learn them good**
 
 Data-driven tutorials for reagent components with no changes required to your dom.
+Live demo at [https://oliyh.github.io/re-learn/](https://oliyh.github.io/re-learn/).
 
 ![](documentation/re-learn.gif?raw=true)
 
