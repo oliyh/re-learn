@@ -376,3 +376,16 @@ html #clear-completed:active {
 		bottom: 10px;
 	}
 }
+
+.re-learn-controls {
+    border-top: 1px solid lightgray;
+    text-align: center;
+}
+
+.re-learn-controls button {
+    border: 1px solid gray;
+    background-color: hotpink;
+    padding: 8px;
+    border-radius: 2px;
+    color: white;
+}

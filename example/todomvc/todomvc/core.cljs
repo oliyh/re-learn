@@ -19,10 +19,11 @@
   (re-learn/with-lesson
     {:id :re-learn-controls-lesson
      :description "Use these controls to run the tutorial again or activate help mode"
-     :position :left}
+     :position :top}
     (fn []
-      [:div
-       [:p [:button {:on-click re-learn/reset-education!} "Reset"]]
+      [:div.re-learn-controls
+       [:h3 "Tutorial controls"]
+       [:p [:button {:on-click re-learn/reset-education!} "Reset tutorial"]]
        [:p [:button {:on-click re-learn/enable-help-mode!} "Help mode"]]])))
 
 (def todo-app

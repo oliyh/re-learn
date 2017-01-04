@@ -24,10 +24,16 @@
 
                                   ;; todomvc
                                   [secretary "1.2.2"]
-                                  [alandipert/storage-atom "1.2.4"]]
+                                  [alandipert/storage-atom "1.2.4"]
+
+                                  ;; gh-pages deploy
+                                  [leiningen-core "2.7.1"]]
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
-  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]}
+  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]
+            "build-pages" ["do"
+                           ["run" "-m" "pages/build"]
+                           ["cljsbuild" "once" "pages"]]}
   :figwheel {:css-dirs ["dev-resources/public/css"]}
   :cljsbuild {:builds [{:id "checkout"
                         :source-paths ["src/" "example/checkout"]
@@ -48,6 +54,13 @@
                                    :output-dir "dev-resources/public/todomvc/js/out"
                                    :preloads [devtools.preload]
                                    :parallel-build true}}
+
+                       {:id "pages"
+                        :source-paths ["src/" "example/todomvc"]
+                        :compiler {:main "todomvc.core"
+                                   :output-to "dist/js/app.js"
+                                   :parallel-build true
+                                   :optimizations :advanced}}
 
                        {:id "devcards"
                         :figwheel {:devcards true}

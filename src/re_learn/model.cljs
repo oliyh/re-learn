@@ -129,7 +129,7 @@
                            (if (:continue lesson)
                              (let [{:keys [event selector event-filter]
                                     :or {event-filter identity}} (:continue lesson)
-                                   dom-node (when selector (dom/sel1 selector) (:dom-node lesson))]
+                                   dom-node (if selector (dom/sel1 selector) (:dom-node lesson))]
                                {:db db
                                 ::on-dom-event [event
                                                 dom-node
