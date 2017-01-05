@@ -107,10 +107,10 @@
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    padding: 24;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 2em;
+    z-index: 10000;
 }
 
 .tutorial-description {
