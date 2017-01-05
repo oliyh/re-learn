@@ -5,7 +5,7 @@
 (def component
   (re-learn/with-lesson
     {:id :todo-item-lesson
-     :description "These are the items in your todo list"
+     :description "These are the items in your todo list. Double click the text to edit or click the checkbox to complete."
      :position :left
      :attach [:#todo-list :li]}
     (fn [todos]
