@@ -83,7 +83,6 @@ Let re-learn take care of everything else!
 re-learn has simple and structured markup making it easy for you to apply your own styles.
 To get started it's easiest to copy the [reference version](dev-resources/public/css/re-learn.css) into your own project and adapt it as you wish.
 
-
 ## Development
 
 ```clojure
@@ -95,10 +94,6 @@ cljs.user>
 ```
 
 [![CircleCI](https://circleci.com/gh/oliyh/re-learn.svg?style=svg)](https://circleci.com/gh/oliyh/re-learn)
-
-## To do
-- Can unlearn individual tutorials rather than unlearning everything
-- Live demo
 
 ## License
 
