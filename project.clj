@@ -3,6 +3,14 @@
   :url "https://github.com/oliyh/re-learn"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]
+                  ["deploy" "clojars"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]]
   :dependencies [[re-frame "0.8.0"]
                  [prismatic/dommy "1.1.0"]
                  [prismatic/schema "1.1.3"]]
