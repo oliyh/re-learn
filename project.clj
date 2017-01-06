@@ -1,5 +1,5 @@
 (defproject re-learn "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "Data-driven tutorials for reagent UIs"
   :url "https://github.com/oliyh/re-learn"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
