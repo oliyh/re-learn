@@ -25,4 +25,5 @@
 (defn push [& args]
   (println "Pushing gh-pages")
   (eval/sh-with-exit-code "Couldn't commit" "git" "commit" "dist" "-m" "deploying gh-pages")
-  (eval/sh-with-exit-code "Couldn't push" "git" "subtree" "push" "--prefix" "dist" "origin" "gh-pages"))
+  (eval/sh-with-exit-code "Couldn't push subtree" "git" "subtree" "push" "--prefix" "dist" "origin" "gh-pages")
+  (eval/sh-with-exit-code "Couldn't push" "git" "push"))
