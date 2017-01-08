@@ -377,6 +377,23 @@ html #clear-completed:active {
 	}
 }
 
+#re-learn-intro {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 250px;
+    margin-bottom: 500px;
+}
+
+@media (max-width: 1074px) {
+    #re-learn-intro {
+        position: relative;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}
+
 .re-learn-controls {
     border-top: 1px solid lightgray;
     text-align: center;

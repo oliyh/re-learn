@@ -27,10 +27,7 @@
        [:p [:button {:on-click re-learn/enable-help-mode!} "Help mode"]]])))
 
 (defn- re-learn-intro []
-  [:aside {:style {:position "absolute"
-                   :top 8
-                   :left 8
-                   :width 250}}
+  [:aside#re-learn-intro
    [:div {:style {:padding 24
                   :background-color "#eee"}}
     [:h3 "Hello"]
@@ -58,7 +55,6 @@
                re-learn-controls]}
     (fn []
       [:div
-       [re-learn-intro]
        [:section#todoapp
         [:header#header
          [title/component]
@@ -73,7 +69,8 @@
           [todos-count/component]
           [todos-filters/component]
           [todos-clear/component]]]]
-       [footer/component]])))
+       [footer/component]
+       [re-learn-intro]])))
 
 (defn- mount-all []
   (reagent/render [todo-app] (js/document.getElementById "app"))
