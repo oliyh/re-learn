@@ -10,8 +10,13 @@
 (defn ->bounds [dom-node]
   (some-> dom-node dom/bounding-client-rect))
 
+(defn- ->absolute-bounds [dom-node]
+  (let [elem-bounds (->bounds dom-node)]
+    (merge-with + elem-bounds {:top js/window.scrollY
+                               :left js/window.scrollX})))
+
 (defn- container-position-style [dom-node position]
-  (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
+  (let [{:keys [top left height width] :as bounds} (->absolute-bounds dom-node)]
     {:position "absolute"
      :top top
      :left left
@@ -21,7 +26,7 @@
 (def arrow-width 10)
 
 (defn- bubble-position-style [dom-node position]
-  (let [{:keys [top left height width] :as bounds} (->bounds dom-node)]
+  (let [{:keys [height width] :as bounds} (->bounds dom-node)]
 
     (cond-> {}
       (or (nil? bounds) (= :unattached position))
@@ -142,7 +147,7 @@
                     :let [dom-node (if attach (dom/sel1 attach) dom-node)
                           position (if dom-node position :unattached)]
                     :when (not= :unattached position)
-                    :let [bounds (->bounds dom-node)]]
+                    :let [bounds (->absolute-bounds dom-node)]]
                 ^{:key id}
                 [:div {:id (str (name id) "-container")
                        :class (str "help-outline " (name position))
