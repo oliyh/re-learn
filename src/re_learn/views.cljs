@@ -3,17 +3,10 @@
             [goog.string :as gstring]
             [re-frame.core :as re-frame]
             [re-learn.model :as model]
+            [re-learn.dom :refer [->absolute-bounds ->dimensions]]
             [reagent.impl.component :as rc]
             [dommy.core :as dom]
             [reagent.core :as r]))
-
-(defn ->bounds [dom-node]
-  (some-> dom-node dom/bounding-client-rect))
-
-(defn- ->absolute-bounds [dom-node]
-  (let [elem-bounds (->bounds dom-node)]
-    (merge-with + elem-bounds {:top js/window.scrollY
-                               :left js/window.scrollX})))
 
 (defn- container-position-style [dom-node position]
   (let [{:keys [top left height width] :as bounds} (->absolute-bounds dom-node)]
@@ -26,7 +19,7 @@
 (def arrow-width 10)
 
 (defn- bubble-position-style [dom-node position]
-  (let [{:keys [height width] :as bounds} (->bounds dom-node)]
+  (let [{:keys [height width] :as bounds} (->dimensions dom-node)]
 
     (cond-> {}
       (or (nil? bounds) (= :unattached position))

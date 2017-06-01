@@ -3,6 +3,7 @@
             [re-frame.std-interceptors :refer [trim-v]]
             [re-learn.local-storage :as local-storage]
             [re-learn.schema :refer [ReLearnModel]]
+            [re-learn.dom :refer [->absolute-bounds in-viewport? viewport-height viewport-width]]
             [dommy.core :as dom]
             [schema.core :as s]))
 
@@ -45,6 +46,13 @@
                  (fn [[lesson callback-name]]
                    (when-let [callback (get lesson callback-name)]
                      (callback lesson))))
+
+(re-frame/reg-fx ::scroll-to-dom-node
+                 (fn [[dom-node]]
+                   (when (not (in-viewport? dom-node))
+                     (let [{:keys [top left]} (->absolute-bounds dom-node)]
+                       (js/window.scrollTo (- left (/ (viewport-width) 2))
+                                           (- top (/ (viewport-height) 2)))))))
 
 (re-frame/reg-event-fx ::deregister-dom-event
                        interceptors
@@ -133,13 +141,15 @@
                          (let [lesson (get-in db [:lessons lesson-id])]
                            (merge
                             {:db db
-                             ::lesson-callback [lesson :on-appear]}
+                             ::lesson-callback [lesson :on-appear]
+                             ::scroll-to-dom-node [(:dom-node lesson)]}
 
                             (if (:continue lesson)
                               (let [{:keys [event selector event-filter]
                                      :or {event-filter identity}} (:continue lesson)
                                     dom-node (if selector (dom/sel1 selector) (:dom-node lesson))]
-                                {::on-dom-event [event
+                                {::scroll-to-dom-node [dom-node]
+                                 ::on-dom-event [event
                                                  dom-node
                                                  (fn listener [e]
                                                    (when (event-filter e)
