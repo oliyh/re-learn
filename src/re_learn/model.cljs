@@ -41,6 +41,11 @@
                  (fn [[action dom-node on-event]]
                    (dom/unlisten! dom-node action on-event)))
 
+(re-frame/reg-fx ::lesson-callback
+                 (fn [[lesson callback-name]]
+                   (when-let [callback (get lesson callback-name)]
+                     (callback lesson))))
+
 (re-frame/reg-event-fx ::deregister-dom-event
                        interceptors
                        (fn [{:keys [db]} [event dom-node on-event]]
@@ -126,18 +131,20 @@
                        interceptors
                        (fn [{:keys [db]} [lesson-id]]
                          (let [lesson (get-in db [:lessons lesson-id])]
-                           (if (:continue lesson)
-                             (let [{:keys [event selector event-filter]
-                                    :or {event-filter identity}} (:continue lesson)
-                                   dom-node (if selector (dom/sel1 selector) (:dom-node lesson))]
-                               {:db db
-                                ::on-dom-event [event
-                                                dom-node
-                                                (fn listener [e]
-                                                  (when (event-filter e)
-                                                    (re-frame/dispatch [::lesson-learned lesson-id])
-                                                    (re-frame/dispatch [::deregister-dom-event event dom-node listener])))]})
-                             {:db db}))))
+                           (merge
+                            {:db db
+                             ::lesson-callback [lesson :on-appear]}
+
+                            (if (:continue lesson)
+                              (let [{:keys [event selector event-filter]
+                                     :or {event-filter identity}} (:continue lesson)
+                                    dom-node (if selector (dom/sel1 selector) (:dom-node lesson))]
+                                {::on-dom-event [event
+                                                 dom-node
+                                                 (fn listener [e]
+                                                   (when (event-filter e)
+                                                     (re-frame/dispatch [::lesson-learned lesson-id])
+                                                     (re-frame/dispatch [::deregister-dom-event event dom-node listener])))]}))))))
 
 (defn- already-learned?
   ([lessons-learned]
