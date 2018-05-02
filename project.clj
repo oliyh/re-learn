@@ -13,7 +13,7 @@
                   ["vcs" "push"]]
   :dependencies [[re-frame "0.8.0"]
                  [prismatic/dommy "1.1.0"]
-                 [prismatic/schema "1.1.3"]]
+                 [prismatic/schema "1.1.9"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-doo "0.1.6"]
             [lein-figwheel "0.5.4-7"]]
