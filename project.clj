@@ -1,4 +1,4 @@
-(defproject re-learn "0.1.2"
+(defproject re-learn "0.1.3-SNAPSHOT"
   :description "Data-driven tutorials for reagent UIs"
   :url "https://github.com/oliyh/re-learn"
   :license {:name "Eclipse Public License"
