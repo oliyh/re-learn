@@ -14,8 +14,8 @@
   :dependencies [[re-frame "0.10.9"]
                  [prismatic/dommy "1.1.0"]
                  [prismatic/schema "1.1.12"]]
-  :plugins [[lein-cljsbuild "1.1.1"]
-            [lein-doo "0.1.6"]
+  :plugins [[lein-cljsbuild "1.1.7"]
+            [lein-doo "0.1.10"]
             [lein-figwheel "0.5.4-7"]]
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.10.1"]
                                        [org.clojure/clojurescript "1.10.597"]]}
@@ -28,17 +28,19 @@
                                   [devcards "0.2.6"]
                                   [binaryage/devtools "0.9.11"]
                                   [day8.re-frame/test "0.1.5"]
-                                  [lein-doo "0.1.11"]
+                                  [lein-doo "0.1.10"]
 
                                   ;; todomvc
                                   [secretary "1.2.3"]
                                   [alandipert/storage-atom "1.2.4"]
 
                                   ;; gh-pages deploy
-                                  [leiningen-core "2.9.1"]]
+                                  [leiningen-core "2.9.1"]
+
+                                  [doo-chrome-devprotocol "0.1.1"]]
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}}
-  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]
+  :aliases {"test" ["do" ["clean"] ["cljsbuild" "once" "test"] ["test"]]
             "build-pages" ["do"
                            ["run" "-m" "pages/build"]
                            ["cljsbuild" "once" "pages"]]
