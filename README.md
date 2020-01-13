@@ -88,7 +88,7 @@ To get started it's easiest to copy the [reference version](dev-resources/public
 ```clojure
 user> (dev)
 dev> (start)
-;; visit http://localhost:3449/todomvc/index.html
+;; visit http://localhost:3449
 dev> (cljs)
 cljs.user>
 ```

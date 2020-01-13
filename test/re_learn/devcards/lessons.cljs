@@ -1,7 +1,9 @@
 (ns re-learn.devcards.lessons
   (:require [devcards.core :as dc :refer-macros [defcard-rg]]
-            [reagent.core :as reagent]
             [re-learn.views :as views]))
+
+(defcard-rg instructions
+  [:p "You may need to touch a file to get figwheel to fresh the view before the devcards start displaying as expected"])
 
 (defcard-rg lesson-bubble
   (let [attrs {:style {:display "inline-block"

@@ -11,33 +11,33 @@
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
                   ["vcs" "push"]]
-  :dependencies [[re-frame "0.8.0"]
+  :dependencies [[re-frame "0.10.9"]
                  [prismatic/dommy "1.1.0"]
-                 [prismatic/schema "1.1.9"]]
+                 [prismatic/schema "1.1.12"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-doo "0.1.6"]
             [lein-figwheel "0.5.4-7"]]
-  :profiles {:provided {:dependencies [[org.clojure/clojure "1.8.0"]
-                                       [org.clojure/clojurescript "1.9.229"]]}
+  :profiles {:provided {:dependencies [[org.clojure/clojure "1.10.1"]
+                                       [org.clojure/clojurescript "1.10.597"]]}
              :dev {:source-paths ["dev"]
                    :resource-paths ["dev-resources"]
                    :exclusions [[org.clojure/tools.reader]]
-                   :dependencies [[org.clojure/tools.reader "0.10.0"]
-                                  [com.cemerick/piggieback "0.2.1"]
-                                  [figwheel-sidecar "0.5.2"]
-                                  [devcards "0.2.2"]
-                                  [binaryage/devtools "0.8.3"]
-                                  [day8.re-frame/test "0.1.3"]
-                                  [lein-doo "0.1.6"]
+                   :dependencies [[org.clojure/tools.reader "1.3.2"]
+                                  [cider/piggieback "0.4.2"]
+                                  [figwheel-sidecar "0.5.19"]
+                                  [devcards "0.2.6"]
+                                  [binaryage/devtools "0.9.11"]
+                                  [day8.re-frame/test "0.1.5"]
+                                  [lein-doo "0.1.11"]
 
                                   ;; todomvc
-                                  [secretary "1.2.2"]
+                                  [secretary "1.2.3"]
                                   [alandipert/storage-atom "1.2.4"]
 
                                   ;; gh-pages deploy
-                                  [leiningen-core "2.7.1"]]
+                                  [leiningen-core "2.9.1"]]
                    :repl-options {:init-ns user
-                                  :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
+                                  :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}}
   :aliases {"test" ["do" ["clean"] ["test"] ["doo" "phantom" "test" "once"]]
             "build-pages" ["do"
                            ["run" "-m" "pages/build"]
@@ -68,6 +68,7 @@
                         :source-paths ["src/" "example/todomvc"]
                         :compiler {:main "todomvc.core"
                                    :output-to "dist/js/app.js"
+                                   :output-dir "dist"
                                    :parallel-build true
                                    :optimizations :advanced}}
 
@@ -84,6 +85,7 @@
                        {:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-to "out/unit-test.js"
+                                   :output-dir "out"
                                    :main "re-learn.runner"
                                    :optimizations :whitespace
                                    :parallel-build true}}]})
