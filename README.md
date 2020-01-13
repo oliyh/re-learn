@@ -49,10 +49,13 @@ Combine lessons into tutorials and attach them to views:
 ```clojure
 (def checkout
   (re-learn/with-tutorial
-    {:id          :checkout-tutorial
-     :name        "The checkout"
-     :description "Review your basket, check the price and confirm your purchase"
-     :precedence  1 ;; optional, allows some tutorials to take precedence over others
+    {:id           :checkout-tutorial
+     :name         "The checkout"
+     :description  "Review your basket, check the price and confirm your purchase"
+     :precedence   1 ;; optional, allows some tutorials to take precedence over others
+     :auto-accept? false ;; optional, defaults to false
+                         ;; when true will start the tutorial immediately when this component is rendered
+                         ;; when false will display a snackbar indicating that a tutorial is available
      :lessons [{:id          :welcome-lesson ;; this is an inline lesson, not attached to anything
                 :description "Welcome to the re-learn example"}
                basket

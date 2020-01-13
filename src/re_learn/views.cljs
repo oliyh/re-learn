@@ -112,7 +112,7 @@
            (gstring/unescapeEntities "&#10097;")])])
 
      [:div.context-controls
-      [:a {:on-click #(re-frame/dispatch (into [::model/lesson-learned] (map :id (:to-learn @context))))}
+      [:a {:on-click #(re-frame/dispatch [::model/skip-tutorial (get-in @context [:tutorial :id])])}
        "SKIP " (gstring/unescapeEntities "&#10219")]]
 
      (when (pos? (get-in @context [:completion :total]))
@@ -168,14 +168,28 @@
 (defn tutorial
   "Root view for displaying unlearned tutorials on the page.
    The :context? key allows you to turn on the context view which shows progress through the tutorial
-   at the bottom of the screen."
-  [{:keys [context?]}]
+   at the bottom of the screen.
+   The :auto-accept? key when false shows a notification that lessons are available allowing the user to choose to start one,
+   rather than starting the tutorial straight away when true (legacy behaviour)"
+  [{:keys [context? auto-accept?]
+    :or {context? false
+         auto-accept? false}}]
   (let [tutorial (re-frame/subscribe [::model/current-tutorial])
         help-mode? (re-frame/subscribe [::model/help-mode?])]
     (fn []
-      (if @help-mode?
-        [help-mode]
-        [:div
-         [lesson-view (:current-lesson @tutorial)]
-         (when context?
-           [lesson-context tutorial])]))))
+      (cond @help-mode?
+            [help-mode]
+
+            (and (false? auto-accept?) (false? (:accepted? @tutorial)))
+            [:div.toast
+             "There is a tutorial available"
+             [:button.accept {:on-click #(re-frame/dispatch [::model/accept-tutorial (get-in @tutorial [:tutorial :id])])}
+              "Start"]
+             [:button.dismiss {:on-click #(re-frame/dispatch [::model/skip-tutorial (get-in @tutorial [:tutorial :id])])}
+              "Dismiss"]]
+
+            (or auto-accept? (:accepted? @tutorial))
+            [:div
+             [lesson-view (:current-lesson @tutorial)]
+             (when context?
+               [lesson-context tutorial])]))))

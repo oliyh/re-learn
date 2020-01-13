@@ -130,7 +130,7 @@
         app-root (js/document.getElementById "app")]
 
     (reagent/render [checkout app-db] app-root)
-    (reagent/render [re-learn-views/tutorial {:context? true}] tutorial-root)))
+    (reagent/render [re-learn-views/tutorial {:context? true :auto-accept? true}] tutorial-root)))
 
 (defn- on-figwheel-reload []
   (mount-all))

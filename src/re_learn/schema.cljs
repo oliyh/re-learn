@@ -26,8 +26,9 @@
    :precedence  s/Int})
 
 (def ReLearnModel
-  {:help-mode?                       s/Bool
-   :highlighted-lesson-id            (s/maybe LessonId)
-   (s/optional-key :lessons-learned) {LessonId s/Int}
-   (s/optional-key :lessons)         {LessonId Lesson}
-   (s/optional-key :tutorials)       {TutorialId Tutorial}})
+  {:help-mode?                          s/Bool
+   :highlighted-lesson-id               (s/maybe LessonId)
+   (s/optional-key :lessons-learned)    {LessonId s/Int}
+   (s/optional-key :lessons)            {LessonId Lesson}
+   (s/optional-key :tutorials)          {TutorialId Tutorial}
+   (s/optional-key :accepted-tutorials) #{TutorialId}})

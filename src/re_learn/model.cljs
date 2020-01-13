@@ -1,6 +1,5 @@
 (ns re-learn.model
   (:require [re-frame.core :as re-frame]
-            [re-frame.std-interceptors :refer [trim-v]]
             [re-learn.local-storage :as local-storage]
             [re-learn.schema :refer [ReLearnModel]]
             [re-learn.dom :refer [->absolute-bounds in-viewport? viewport-height viewport-width]]
@@ -31,7 +30,7 @@
 (re-frame/reg-event-fx ::hard-reset
                        interceptors
                        (fn [{:keys [db]}]
-                         {:db (assoc db :lessons-learned {})
+                         {:db (assoc db :lessons-learned {} :accepted-tutorials #{})
                           ::local-storage/save [:re-learn/lessons-learned {}]}))
 
 (re-frame/reg-fx ::on-dom-event
@@ -93,8 +92,11 @@
 
 (re-frame/reg-event-fx ::lesson-learned
                        interceptors
-                       (fn [{:keys [db]} lesson-ids]
-                         (let [lessons-learned (reduce (fn [learned lesson-id]
+                       (fn [{:keys [db]} [lesson-id-or-ids]]
+                         (let [lesson-ids (if (coll? lesson-id-or-ids)
+                                            lesson-id-or-ids
+                                            [lesson-id-or-ids])
+                               lessons-learned (reduce (fn [learned lesson-id]
                                                          (assoc learned lesson-id
                                                                 (get-in db [:lessons lesson-id :version])))
                                                        (:lessons-learned db)
@@ -108,6 +110,18 @@
                          (let [lessons-learned (dissoc (:lessons-learned db) lesson-id)]
                            {:db (assoc db :lessons-learned lessons-learned)
                             ::local-storage/save [:re-learn/lessons-learned lessons-learned]})))
+
+(re-frame/reg-event-fx ::skip-tutorial
+                       interceptors
+                       (fn [{:keys [db]} [tutorial-id]]
+                         (let [tutorial (get-in db [:tutorials tutorial-id])]
+                           (js/console.log "tutorial" (pr-str tutorial-id) (pr-str tutorial))
+                           {:dispatch [::lesson-learned (:lessons tutorial)]})))
+
+(re-frame/reg-event-db ::accept-tutorial
+                       interceptors
+                       (fn [db [tutorial-id]]
+                         (update db :accepted-tutorials (fnil conj #{}) tutorial-id)))
 
 (defn- ->lesson-id [lesson]
   (cond
@@ -179,10 +193,12 @@
    (let [state (state db)]
      (first (for [tutorial (->> (:tutorials state) vals (sort-by :precedence))
                   :let [lessons (keep (:lessons state) (:lessons tutorial))
-                        [learned to-learn] (split-with #(already-learned? (:lessons-learned state) %) lessons)]
+                        [learned to-learn] (split-with #(already-learned? (:lessons-learned state) %) lessons)
+                        accepted? (contains? (:accepted-tutorials state) (:id tutorial))]
                   lesson to-learn
                   :let [total (count lessons)]]
               {:tutorial tutorial
+               :accepted? accepted?
                :learned learned
                :to-learn to-learn
                :completion {:ratio (/ (+ (count learned) 0.5) total)
