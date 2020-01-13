@@ -99,6 +99,37 @@
     border-bottom-color: rgba(0, 0, 0, 0.8);
 }
 
+/* toast */
+
+.toast {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1em;
+    z-index: 10000;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.toast button {
+    margin-left: 4px;
+    padding: 4px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.toast button.accept {
+    background-color: rgb(255,64,129);
+}
+
+.toast button.dismiss {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
 /* tutorial context */
 
 .context-container {
