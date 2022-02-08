@@ -1,7 +1,8 @@
 (ns checkout.app
   (:require [re-learn.core :as re-learn]
             [re-learn.views :as re-learn-views]
-            [reagent.core :as reagent]))
+            [reagent.core :as reagent]
+            [reagent.dom :as dom]))
 
 (def purchase-button
   (re-learn/with-lesson
@@ -129,8 +130,8 @@
   (let [tutorial-root (js/document.getElementById "tutorial")
         app-root (js/document.getElementById "app")]
 
-    (reagent/render [checkout app-db] app-root)
-    (reagent/render [re-learn-views/tutorial {:context? true :auto-accept? true}] tutorial-root)))
+    (dom/render [checkout app-db] app-root)
+    (dom/render [re-learn-views/tutorial {:context? true :auto-accept? true}] tutorial-root)))
 
 (defn- on-figwheel-reload []
   (mount-all))

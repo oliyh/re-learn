@@ -75,8 +75,8 @@ Let re-learn take care of everything else!
   (let [app-root (js/document.getElementById "app")
         tutorial-root (js/document.getElementById "tutorial")
         app-state (fn [] ...)
-    (reagent/render [checkout app-state] app-root)
-    (reagent/render [re-learn-views/tutorial-view {:context? true}] tutorial-root)))
+    (reagent.dom/render [checkout app-state] app-root)
+    (reagent.dom/render [re-learn-views/tutorial-view {:context? true}] tutorial-root)))
 ```
 
 [Look at the working examples](example) for more details.

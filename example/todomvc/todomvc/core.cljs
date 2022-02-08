@@ -1,5 +1,6 @@
 (ns todomvc.core
   (:require [reagent.core :as reagent]
+            [reagent.dom :as dom]
             [todomvc.routes]
             [todomvc.session :as session]
             [todomvc.actions :as actions]
@@ -73,8 +74,8 @@
        [re-learn-intro]])))
 
 (defn- mount-all []
-  (reagent/render [todo-app] (js/document.getElementById "app"))
-  (reagent/render [re-learn-views/tutorial {:context? true}] (js/document.getElementById "tutorial")))
+  (dom/render [todo-app] (js/document.getElementById "app"))
+  (dom/render [re-learn-views/tutorial {:context? true}] (js/document.getElementById "tutorial")))
 
 (defn- on-figwheel-reload []
   (mount-all))

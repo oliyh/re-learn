@@ -2,6 +2,7 @@
   (:require [reagent.core :as reagent]
             [todomvc.actions :as actions]
             [todomvc.helpers :as helpers]
+            [reagent.dom :as dom]
             [re-learn.core :as re-learn]))
 
 (defn on-key-down [k title default]
@@ -27,4 +28,4 @@
                               :placeholder "What needs to be done?"
                               :on-change #(reset! title (-> % .-target .-value))
                               :on-key-down #(on-key-down % title default)}])))
-      {:component-did-mount #(.focus (reagent/dom-node %))})))
+      {:component-did-mount #(.focus (dom/dom-node %))})))
