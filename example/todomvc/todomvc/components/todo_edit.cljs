@@ -1,5 +1,6 @@
 (ns todomvc.components.todo-edit
   (:require [reagent.core :as reagent]
+            [reagent.dom :as dom]
             [todomvc.actions :as actions]
             [todomvc.helpers :as helpers]))
 
@@ -23,7 +24,7 @@
                     :on-key-down #(on-key-down % id edit-title default editing)}])))
 
 (defn component-did-update [x]
-  (.focus (reagent/dom-node x)))
+  (.focus (dom/dom-node x)))
 
 (defn component []
   (reagent/create-class {:reagent-render component-render

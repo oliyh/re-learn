@@ -1,11 +1,12 @@
 (ns re-learn.core
   (:require [re-frame.core :as re-frame]
             [reagent.core :as r]
+            [reagent.dom :as d]
             [re-learn.model :as model]
             [dommy.core :as dom]))
 
 (defn register-lesson [lesson]
-  (fn [this] (re-frame/dispatch [::model/register-lesson (assoc lesson :dom-node (r/dom-node this))])))
+  (fn [this] (re-frame/dispatch [::model/register-lesson (assoc lesson :dom-node (d/dom-node this))])))
 
 (defn deregister-lesson [lesson-id]
   (fn [_] (re-frame/dispatch [::model/deregister-lesson lesson-id])))
