@@ -1,0 +1,8 @@
+.toast {
+    position: relative;
+    display: inline-block;
+}
+
+.context-container {
+    position: relative;
+}

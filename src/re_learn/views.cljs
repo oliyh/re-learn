@@ -165,6 +165,19 @@
         [help-mode]
         [lesson-view current-lesson]))))
 
+(defn tutorial-toast [tutorial]
+  [:div.toast
+   [:h2
+    [:span.tutorial-name-prefix "Tutorial: "]
+    [:span.tutorial-name (get-in tutorial [:tutorial :name])]]
+   [:p.tutorial-description (get-in tutorial [:tutorial :description])]
+
+   [:div.actions
+    [:button.accept {:on-click #(re-frame/dispatch [::model/accept-tutorial (get-in tutorial [:tutorial :id])])}
+     "Start tutorial"]
+    [:button.dismiss {:on-click #(re-frame/dispatch [::model/skip-tutorial (get-in tutorial [:tutorial :id])])}
+     "Dismiss"]]])
+
 (defn tutorial
   "Root view for displaying unlearned tutorials on the page.
    The :context? key allows you to turn on the context view which shows progress through the tutorial
@@ -181,12 +194,7 @@
             [help-mode]
 
             (and (false? auto-accept?) (false? (:accepted? @tutorial)))
-            [:div.toast
-             "There is a tutorial available"
-             [:button.accept {:on-click #(re-frame/dispatch [::model/accept-tutorial (get-in @tutorial [:tutorial :id])])}
-              "Start"]
-             [:button.dismiss {:on-click #(re-frame/dispatch [::model/skip-tutorial (get-in @tutorial [:tutorial :id])])}
-              "Dismiss"]]
+            [tutorial-toast @tutorial]
 
             (or auto-accept? (:accepted? @tutorial))
             [:div

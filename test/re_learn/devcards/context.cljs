@@ -34,3 +34,6 @@
 
 (defcard-rg lesson-bubble
   [views/lesson-context context])
+
+(defcard-rg tutorial-toast
+  [views/tutorial-toast @context])

@@ -114,6 +114,11 @@
     border-top-left-radius: 4px;
 }
 
+.toast .actions {
+    margin: 0 auto;
+    text-align: center;
+}
+
 .toast button {
     margin-left: 4px;
     padding: 4px;
@@ -144,12 +149,12 @@
     z-index: 10000;
 }
 
-.tutorial-description {
+.context-container .tutorial-description {
     width: 40%;
     display: inline-block;
 }
 
-.tutorial-description h2 {
+.context-container .tutorial-description h2 {
     margin-top: 0;
 }
 
